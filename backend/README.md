@@ -16,5 +16,5 @@
 
 # run the application
 ```bash
-    uvicorn main:app --reload
+    uvicorn src.main:app --reload
 ```
