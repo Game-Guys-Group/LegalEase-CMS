@@ -35,7 +35,6 @@ class File(Base):
     description = Column(String)
     court_station = Column(String)
     type_of_case = Column(String)
-
     attachments = relationship("Attachment", back_populates="file")
     client_id = Column(Integer, ForeignKey("clients.id"))
     client = relationship("Client", back_populates="files")

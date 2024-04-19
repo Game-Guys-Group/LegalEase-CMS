@@ -42,12 +42,14 @@ class TokenData(BaseModel):
 class File(BaseModel):
     id: int
     case_id: str
+    client_id: int
     description: str
     court_station: str
     type_of_case : str
 
 class FileCreate(BaseModel):
     case_id: str
+    client_id: int
     description: str
     court_station: str
     type_of_case : str

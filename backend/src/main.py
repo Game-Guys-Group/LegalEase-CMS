@@ -64,7 +64,7 @@ def create_file(
     current_user: models.User = Depends(crud.get_current_user),
     db: Session = Depends(crud.get_db)
     ):
-    return crud.create_file(db=db, file=file, client=current_user)
+    return crud.create_file(db=db, file=file, user=current_user)
 
 @app.get("/files/get", response_model=List[schemas.File])
 def get_files(

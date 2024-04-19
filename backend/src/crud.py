@@ -101,8 +101,23 @@ def get_clients(db: Session, user: models.User, skip: int = 0, limit: int = 100)
     return db.query(models.Client).filter(models.Client.owner == user).offset(skip).limit(limit).all()
 
 
-def create_file(db: Session, file: schemas.FileCreate, client: models.Client) -> models.File:
-    db_file = models.File(case_id=file.case_id, description=file.description, court_station=file.court_station, type_of_case=file.type_of_case, client=client)
+def create_file(db: Session, file: schemas.FileCreate, user: models.User) -> models.File:
+    client = db.query(models.Client).filter(models.Client.id == file.client_id).first()
+
+    if not client:
+        raise HTTPException(status_code=404, detail="Client not found")
+
+    if client.owner != user:
+        raise HTTPException(status_code=401, detail="unauthorized access")
+
+    db_file = models.File(
+        case_id=file.case_id,
+        description=file.description,
+        court_station=file.court_station,
+        type_of_case=file.type_of_case,
+        client=client
+    )
+
     db.add(db_file)
     db.commit()
     db.refresh(db_file)
