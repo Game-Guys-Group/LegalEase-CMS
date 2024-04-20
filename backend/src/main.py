@@ -41,7 +41,7 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(crud.get_db)):
     return crud.create_user(db=db, user=user)
 
 @app.get("/users/get", response_model=schemas.User)
-def read_users(
+def read_current_user(
     current_user: models.User = Depends(crud.get_current_user),
     db: Session = Depends(crud.get_db)
     ):
