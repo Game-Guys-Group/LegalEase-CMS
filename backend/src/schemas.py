@@ -1,5 +1,4 @@
 from typing import Union
-from typing_extensions import Optional
 from pydantic import BaseModel
 
 
@@ -32,6 +31,10 @@ class Client(UserBase):
     class Config:
         orm_mode = True
 
+class ClientUpdate(BaseModel):
+    email: Union[str, None] = None
+    name: Union[str, None] = None
+    phone: Union[str, None] = None
 
 class Token(BaseModel):
     access_token: str

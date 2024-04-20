@@ -1,7 +1,7 @@
 from typing_extensions import List
 from fastapi import Depends, FastAPI, HTTPException, status, UploadFile
 from datetime import timedelta
-from typing import Annotated
+from typing import Annotated, Optional
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordRequestForm
 
@@ -40,7 +40,6 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(crud.get_db)):
         raise HTTPException(status_code=400, detail="Email already registered")
     return crud.create_user(db=db, user=user)
 
-
 @app.get("/users/get", response_model=schemas.User)
 def read_users(
     current_user: models.User = Depends(crud.get_current_user),
@@ -63,6 +62,7 @@ def delete_user(
     ):
     return crud.delete_user(db=db, user=current_user)
 
+# client routes
 @app.post("/user/clients/create", response_model=schemas.Client)
 def create_client(
         client: schemas.ClientCreate,
@@ -76,10 +76,37 @@ def create_client(
 def read_clients(
         skip: int = 0,
         limit: int = 100,
+        name_like: Optional[str] = None,
+        email_like: Optional[str] = None,
         current_user: models.User = Depends(crud.get_current_user),
         db: Session = Depends(crud.get_db)
     ):
-    return crud.get_clients(db, user=current_user, skip=skip, limit=limit)
+    return crud.get_clients(db, user=current_user, skip=skip, limit=limit, name_like=name_like, email_like=email_like)
+
+@app.get("/user/clients/get/{client_id}", response_model=schemas.Client)
+def read_client(
+        client_id: int,
+        current_user: models.User = Depends(crud.get_current_user),
+        db: Session = Depends(crud.get_db)
+    ):
+    return crud.get_client(db, user=current_user, client_id=client_id)
+
+@app.put("/user/clients/update/{client_id}", response_model=schemas.Client)
+def update_client(
+        client_id: int,
+        client: schemas.ClientUpdate,
+        current_user: models.User = Depends(crud.get_current_user),
+        db: Session = Depends(crud.get_db)
+    ):
+    return crud.update_client(db, user=current_user, client_id=client_id, client=client)
+
+@app.delete("/user/clients/delete/{client_id}")
+def delete_client(
+        client_id: int,
+        current_user: models.User = Depends(crud.get_current_user),
+        db: Session = Depends(crud.get_db)
+    ):
+    return crud.delete_client(db, user=current_user, client_id=client_id)
 
 
 @app.post("/files/create", response_model=schemas.File)

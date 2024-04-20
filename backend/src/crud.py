@@ -124,9 +124,52 @@ def create_client(db: Session, client: schemas.ClientCreate, user: models.User) 
     return db_client
 
 
-def get_clients(db: Session, user: models.User, skip: int = 0, limit: int = 100) -> List[models.Client]:
-    return db.query(models.Client).filter(models.Client.owner == user).offset(skip).limit(limit).all()
+def get_clients(
+        db: Session,
+        user: models.User,
+        skip: int = 0,
+        limit: int = 100,
+        name_like: Optional[str] = None,
+        email_like: Optional[str] = None) -> List[models.Client]:
 
+    name_filter = models.Client.name.like(f"%{name_like.strip()}%") if name_like else None
+    email_filter = models.Client.email.like(f"%{email_like.strip()}%") if email_like else None
+    filters = [f for f in [name_filter, email_filter] if f is not None]
+
+    return (db.query(models.Client)
+        .filter(models.Client.owner == user, *filters)
+        .offset(skip)
+        .limit(limit)
+        .all())
+
+def get_client(db: Session, user: models.User, client_id: int) -> models.Client:
+    verify_client = db.query(models.Client).filter(models.Client.owner == user, models.Client.id == client_id).first()
+    if not verify_client:
+        raise HTTPException(status_code=404, detail="Client not found")
+    return verify_client
+
+def update_client(db: Session, client_id: int, client: schemas.ClientUpdate, user: models.User) -> models.Client:
+    verify_client = db.query(models.Client).filter(models.Client.owner == user, models.Client.id == client_id).first()
+    if not verify_client:
+        raise HTTPException(status_code=404, detail="Client not found")
+    if client.email:
+        verify_client.email = client.email
+    if client.name:
+        verify_client.name = client.name
+    if client.phone:
+        verify_client.phone = client.phone
+    db.commit()
+    db.refresh(verify_client)
+    return verify_client
+
+
+def delete_client(db: Session, client_id: int, user: models.User):
+    verify_client = db.query(models.Client).filter(models.Client.owner == user, models.Client.id == client_id).first()
+    if not verify_client:
+        raise HTTPException(status_code=404, detail="Client not found")
+    db.delete(verify_client)
+    db.commit()
+    return {"message": "Client deleted"}
 
 def create_file(db: Session, file: schemas.FileCreate, user: models.User) -> models.File:
     client = db.query(models.Client).filter(models.Client.id == file.client_id).first()
