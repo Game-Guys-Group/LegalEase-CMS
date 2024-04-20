@@ -1,13 +1,13 @@
+from typing import Union
+from typing_extensions import Optional
 from pydantic import BaseModel
 
 
 class UserBase(BaseModel):
     email: str
 
-
 class UserCreate(UserBase):
     password: str
-
 
 class User(UserBase):
     id: int
@@ -16,6 +16,9 @@ class User(UserBase):
     class Config:
         orm_mode = True
 
+class UserUpdate(BaseModel):
+    email: Union[str, None] = None
+    password: Union[str, None] = None
 
 class ClientCreate(UserBase):
     name: str

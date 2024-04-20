@@ -33,13 +33,44 @@ def login_for_access_token(
     return schemas.Token(access_token=access_token, token_type="bearer")
 
 # User aka Lawyer routes
-
 @app.post("/users/create", response_model=schemas.User)
 def create_user(user: schemas.UserCreate, db: Session = Depends(crud.get_db)):
     db_user = crud.get_user_by_email(db, email=user.email)
     if db_user:
         raise HTTPException(status_code=400, detail="Email already registered")
     return crud.create_user(db=db, user=user)
+
+
+@app.get("/users/get", response_model=schemas.User)
+def read_users(
+    current_user: models.User = Depends(crud.get_current_user),
+    db: Session = Depends(crud.get_db)
+    ):
+    return crud.get_current_user(db, current_user)
+
+@app.put("/users/update", response_model=schemas.User)
+def update_user(
+    user: schemas.UserUpdate,
+    current_user: models.User = Depends(crud.get_current_user),
+    db: Session = Depends(crud.get_db)
+    ):
+    return crud.update_user(db=db, user=user, current_user=current_user)
+
+@app.delete("/users/delete")
+def delete_user(
+    current_user: models.User = Depends(crud.get_current_user),
+    db: Session = Depends(crud.get_db)
+    ):
+    return crud.delete_user(db=db, user=current_user)
+
+@app.post("/user/clients/create", response_model=schemas.Client)
+def create_client(
+        client: schemas.ClientCreate,
+        current_user: models.User = Depends(crud.get_current_user),
+        db: Session = Depends(crud.get_db)
+    ) -> schemas.Client:
+    return crud.create_client(db=db, client=client, user=current_user)
+
 
 @app.get("/user/clients/get", response_model=List[schemas.Client])
 def read_clients(
@@ -50,14 +81,6 @@ def read_clients(
     ):
     return crud.get_clients(db, user=current_user, skip=skip, limit=limit)
 
-
-@app.post("/user/clients/create", response_model=schemas.Client)
-def create_client(
-        client: schemas.ClientCreate,
-        current_user: models.User = Depends(crud.get_current_user),
-        db: Session = Depends(crud.get_db)
-    ) -> schemas.Client:
-    return crud.create_client(db=db, client=client, user=current_user)
 
 @app.post("/files/create", response_model=schemas.File)
 def create_file(

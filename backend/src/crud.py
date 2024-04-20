@@ -41,6 +41,8 @@ def authenticate_user(db: Session, email: str, password: str) -> Optional[models
         return None
     if not verify_password(password, user.hashed_password):
         return None
+    if not user.is_active:
+        return None
     return user
 
 def create_access_token(data: dict, expires_delta: timedelta | None = None):
@@ -87,6 +89,31 @@ def create_user(db: Session, user: schemas.UserCreate) -> models.User:
     db.commit()
     db.refresh(db_user)
     return db_user
+
+
+def delete_user(db: Session, user: models.User):
+    db_user = db.query(models.User).filter(models.User.id == user.id).first()
+    if not db_user:
+        raise HTTPException(status_code=404, detail="User not found")
+    db.is_active = False
+    db.commit()
+    db.refresh(db_user)
+    return {"message": "User deleted"}
+
+
+def update_user(db: Session, user: schemas.UserUpdate, current_user: models.User) -> models.User:
+    db_user = db.query(models.User).filter(models.User.id == current_user.id).first()
+    if not db_user:
+        raise HTTPException(status_code=404, detail="User not found")
+    if user.email:
+        db_user.email = user.email
+    if user.password:
+        db_user.hashed_password = get_password_hash(user.password)
+    db.commit()
+    db.refresh(db_user)
+    return db_user
+
+
 
 
 def create_client(db: Session, client: schemas.ClientCreate, user: models.User) -> models.Client:
