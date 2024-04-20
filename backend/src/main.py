@@ -12,15 +12,7 @@ from .database import engine
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
-
-@app.post("/users/create", response_model=schemas.User)
-def create_user(user: schemas.UserCreate, db: Session = Depends(crud.get_db)):
-    db_user = crud.get_user_by_email(db, email=user.email)
-    if db_user:
-        raise HTTPException(status_code=400, detail="Email already registered")
-    return crud.create_user(db=db, user=user)
-
-
+# login/token route
 @app.post("/token")
 def login_for_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
@@ -39,6 +31,15 @@ def login_for_access_token(
         data={"sub": user.email}, expires_delta=access_token_expires
     )
     return schemas.Token(access_token=access_token, token_type="bearer")
+
+# User aka Lawyer routes
+
+@app.post("/users/create", response_model=schemas.User)
+def create_user(user: schemas.UserCreate, db: Session = Depends(crud.get_db)):
+    db_user = crud.get_user_by_email(db, email=user.email)
+    if db_user:
+        raise HTTPException(status_code=400, detail="Email already registered")
+    return crud.create_user(db=db, user=user)
 
 @app.get("/user/clients/get", response_model=List[schemas.Client])
 def read_clients(
@@ -66,7 +67,7 @@ def create_file(
     ):
     return crud.create_file(db=db, file=file, user=current_user)
 
-@app.get("/files/get", response_model=List[schemas.File])
+@app.get("/files/get/{client_id}", response_model=List[schemas.File])
 def get_files(
     client_id: int,
     current_user: models.User = Depends(crud.get_current_user),
@@ -83,7 +84,7 @@ def create_attachment(
     ):
     return crud.create_attachment(db=db, attachment=attachment, current_user=current_user, file_id=file_id)
 
-@app.get("/files/attachments/get", response_model=List[schemas.Attachment])
+@app.get("/files/attachments/get/{file_id}", response_model=List[schemas.Attachment])
 def get_attachments(
     file_id: int,
     current_user: models.User = Depends(crud.get_current_user),
