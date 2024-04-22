@@ -1,9 +1,14 @@
 from typing_extensions import List
-from fastapi import Depends, FastAPI, HTTPException, status, UploadFile
+from fastapi import Depends, FastAPI, HTTPException, status, UploadFile, Response, Request
 from datetime import timedelta
 from typing import Annotated, Optional
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordRequestForm
+from fastapi.staticfiles import StaticFiles
+from starlette.responses import FileResponse
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.templating import Jinja2Templates
+import requests
 
 from . import crud, models, schemas
 from .database import engine
@@ -11,6 +16,33 @@ from .database import engine
 
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
+
+app.mount("/static", StaticFiles(directory="../frontend/"), name="static")
+
+MODE = "dev"
+
+origins = [
+    "http://localhost",
+    "http://localhost:8000",
+    "http://localhost:5173/*",
+]
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+templates = Jinja2Templates(directory="src/templates")
+
+@app.get("/")
+async def read_index(request: Request):
+    return templates.TemplateResponse(request = request, name="dev.html", context={"is_dev": MODE == "dev"})
+
 
 # login/token route
 @app.post("/token")
