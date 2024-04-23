@@ -58,7 +58,7 @@ def login_for_access_token(
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    access_token_expires = timedelta(minutes=30)
+    access_token_expires = timedelta(days=30)
     access_token = crud.create_access_token(
         data={"sub": user.email}, expires_delta=access_token_expires
     )

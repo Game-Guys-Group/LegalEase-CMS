@@ -22,11 +22,13 @@ class UserUpdate(BaseModel):
 class ClientCreate(UserBase):
     name: str
     phone: str
+    id_number: str
 
 class Client(UserBase):
     id: int
     name: str
     phone: str
+    id_number: str
 
     class Config:
         orm_mode = True

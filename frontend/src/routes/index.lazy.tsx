@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { createLazyFileRoute } from '@tanstack/react-router'
 import { Link} from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
@@ -29,11 +30,17 @@ function Feature({Icon, title, description}: FeatureProps) {
 
 function Index() {
     const navigate = useNavigate()
+    const [key, setKey] = useState("")
 
-    const auth_key = localStorage.getItem("auth_key")
+    useEffect(() => {
+      const auth_key = localStorage.getItem("auth_key")
+      if (auth_key)
+        setKey(auth_key)
 
-    if (auth_key) {
-      navigate({to:"/dashboard/dashboard"})
+    }, [key]);
+
+    if (key) {
+      navigate({to:"/dashboard/dashboard", replace:true})
       return(
       <div className='flex flex-col items-center justify-center h-full w-full mt-24'>
         <div className=" border-b-secondary-foreground  h-60 w-60 animate-spin rounded-full border-8 border-t-primary-foreground"/>

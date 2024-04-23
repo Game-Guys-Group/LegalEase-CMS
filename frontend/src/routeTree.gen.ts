@@ -13,6 +13,9 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as DashboardClientsIndexImport } from './routes/dashboard/clients/index'
+import { Route as DashboardClientsAddFileImport } from './routes/dashboard/clients/add-file'
+import { Route as DashboardClientsAddClientImport } from './routes/dashboard/clients/add-client'
 
 // Create Virtual Routes
 
@@ -75,6 +78,21 @@ const DashboardAnalyticsLazyRoute = DashboardAnalyticsLazyImport.update({
   import('./routes/dashboard/analytics.lazy').then((d) => d.Route),
 )
 
+const DashboardClientsIndexRoute = DashboardClientsIndexImport.update({
+  path: '/',
+  getParentRoute: () => DashboardClientsLazyRoute,
+} as any)
+
+const DashboardClientsAddFileRoute = DashboardClientsAddFileImport.update({
+  path: '/add-file',
+  getParentRoute: () => DashboardClientsLazyRoute,
+} as any)
+
+const DashboardClientsAddClientRoute = DashboardClientsAddClientImport.update({
+  path: '/add-client',
+  getParentRoute: () => DashboardClientsLazyRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -111,6 +129,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardDashboardLazyImport
       parentRoute: typeof DashboardLazyImport
     }
+    '/dashboard/clients/add-client': {
+      preLoaderRoute: typeof DashboardClientsAddClientImport
+      parentRoute: typeof DashboardClientsLazyImport
+    }
+    '/dashboard/clients/add-file': {
+      preLoaderRoute: typeof DashboardClientsAddFileImport
+      parentRoute: typeof DashboardClientsLazyImport
+    }
+    '/dashboard/clients/': {
+      preLoaderRoute: typeof DashboardClientsIndexImport
+      parentRoute: typeof DashboardClientsLazyImport
+    }
   }
 }
 
@@ -122,7 +152,11 @@ export const routeTree = rootRoute.addChildren([
   CreateaccountLazyRoute,
   DashboardLazyRoute.addChildren([
     DashboardAnalyticsLazyRoute,
-    DashboardClientsLazyRoute,
+    DashboardClientsLazyRoute.addChildren([
+      DashboardClientsAddClientRoute,
+      DashboardClientsAddFileRoute,
+      DashboardClientsIndexRoute,
+    ]),
     DashboardDashboardLazyRoute,
   ]),
   LoginLazyRoute,

@@ -117,7 +117,7 @@ def update_user(db: Session, user: schemas.UserUpdate, current_user: models.User
 
 
 def create_client(db: Session, client: schemas.ClientCreate, user: models.User) -> models.Client:
-    db_client = models.Client(email=client.email, name=client.name, phone=client.phone, owner=user)
+    db_client = models.Client(email=client.email, id_number=client.id_number, name=client.name, phone=client.phone, owner=user)
     db.add(db_client)
     db.commit()
     db.refresh(db_client)

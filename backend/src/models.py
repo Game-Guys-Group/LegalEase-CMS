@@ -21,6 +21,7 @@ class Client(Base):
     email = Column(String)
     phone = Column(String)
     name = Column(String)
+    id_number = Column(String)
 
     files = relationship("File", back_populates="client")
 
