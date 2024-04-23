@@ -1,3 +1,5 @@
+import React from 'react'
+
 function WhyUs() {
     return (
         <div className="dark:bg-gray-900">

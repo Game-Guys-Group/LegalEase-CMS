@@ -1,12 +1,15 @@
 import React from 'react'
-import Hero from '../../components/landingpage/Hero'
-import WhyUs from '../../components/landingpage/WhyUs'
+import Hero from '../../components/pages/landingpage/Hero'
+import WhyUs from '../../components/pages/landingpage/WhyUs'
+import Footer from '../../components/Footer'
 
 function LandingPage() {
   return (
     <>
     <Hero />
-    <WhyUs /></>
+    <WhyUs />
+    <Footer />
+    </>
   )
 }
 
