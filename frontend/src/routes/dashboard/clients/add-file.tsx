@@ -38,8 +38,8 @@ function AddClient() {
       }
 
       const value = await response.json()
-      const cls = value.map((c: { id: string, name: string}) => {
-        return {value: c["id"], label: c["name"]}
+      const cls = value.map((c: { id: number, name: string}) => {
+        return {value: String(c["id"]), label: c["name"]}
       })
 
       console.log(cls)

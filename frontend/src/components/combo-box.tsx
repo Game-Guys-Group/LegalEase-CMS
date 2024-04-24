@@ -136,7 +136,7 @@ export function Combobox({
                         if (onChange) {
                           if (mode === 'multiple' && Array.isArray(selected)) {
                             onChange(
-                              selected.includes(String(option.value))
+                              selected.includes(option.value)
                                 ? selected.filter(
                                     (item) => item !== option.value
                                   )
@@ -151,7 +151,7 @@ export function Combobox({
                       <Check
                         className={cn(
                           'mr-2 h-4 w-4',
-                          String(selected).includes(option.value)
+                          selected.includes(option.value)
                             ? 'opacity-100'
                             : 'opacity-0'
                         )}
