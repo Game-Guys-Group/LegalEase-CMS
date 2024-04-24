@@ -74,7 +74,7 @@ function AddClient() {
                     <Combobox
                       mode='single' //single or multiple
                       options={clients}
-                      placeholder='Select option...'
+                      placeholder='Select Client'
                       selected={client} // string or array
                       onChange={(value) => setClient(value)}
                     />

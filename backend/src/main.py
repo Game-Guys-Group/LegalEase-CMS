@@ -1,5 +1,6 @@
 from typing_extensions import List
 from fastapi import Depends, FastAPI, HTTPException, status, UploadFile, Response, Request
+from fastapi.responses import RedirectResponse
 from datetime import timedelta
 from typing import Annotated, Optional
 from sqlalchemy.orm import Session
@@ -38,6 +39,13 @@ app.add_middleware(
 
 
 templates = Jinja2Templates(directory="src/templates")
+
+
+@app.exception_handler(404)
+async def custom_404_handler(request, __):
+    if request.url.path.startswith("/dashboard"):
+        return RedirectResponse("/")
+    return Response(status_code=404)
 
 @app.get("/")
 async def read_index(request: Request):
