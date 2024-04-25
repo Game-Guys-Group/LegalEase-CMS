@@ -14,8 +14,10 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as DashboardClientsIndexImport } from './routes/dashboard/clients/index'
+import { Route as DashboardClientsViewFileImport } from './routes/dashboard/clients/view-file'
 import { Route as DashboardClientsAddFileImport } from './routes/dashboard/clients/add-file'
 import { Route as DashboardClientsAddClientImport } from './routes/dashboard/clients/add-client'
+import { Route as DashboardClientsClientIdImport } from './routes/dashboard/clients/$clientId'
 
 // Create Virtual Routes
 
@@ -83,6 +85,11 @@ const DashboardClientsIndexRoute = DashboardClientsIndexImport.update({
   getParentRoute: () => DashboardClientsLazyRoute,
 } as any)
 
+const DashboardClientsViewFileRoute = DashboardClientsViewFileImport.update({
+  path: '/view-file',
+  getParentRoute: () => DashboardClientsLazyRoute,
+} as any)
+
 const DashboardClientsAddFileRoute = DashboardClientsAddFileImport.update({
   path: '/add-file',
   getParentRoute: () => DashboardClientsLazyRoute,
@@ -90,6 +97,11 @@ const DashboardClientsAddFileRoute = DashboardClientsAddFileImport.update({
 
 const DashboardClientsAddClientRoute = DashboardClientsAddClientImport.update({
   path: '/add-client',
+  getParentRoute: () => DashboardClientsLazyRoute,
+} as any)
+
+const DashboardClientsClientIdRoute = DashboardClientsClientIdImport.update({
+  path: '/$clientId',
   getParentRoute: () => DashboardClientsLazyRoute,
 } as any)
 
@@ -129,12 +141,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardDashboardLazyImport
       parentRoute: typeof DashboardLazyImport
     }
+    '/dashboard/clients/$clientId': {
+      preLoaderRoute: typeof DashboardClientsClientIdImport
+      parentRoute: typeof DashboardClientsLazyImport
+    }
     '/dashboard/clients/add-client': {
       preLoaderRoute: typeof DashboardClientsAddClientImport
       parentRoute: typeof DashboardClientsLazyImport
     }
     '/dashboard/clients/add-file': {
       preLoaderRoute: typeof DashboardClientsAddFileImport
+      parentRoute: typeof DashboardClientsLazyImport
+    }
+    '/dashboard/clients/view-file': {
+      preLoaderRoute: typeof DashboardClientsViewFileImport
       parentRoute: typeof DashboardClientsLazyImport
     }
     '/dashboard/clients/': {
@@ -153,8 +173,10 @@ export const routeTree = rootRoute.addChildren([
   DashboardLazyRoute.addChildren([
     DashboardAnalyticsLazyRoute,
     DashboardClientsLazyRoute.addChildren([
+      DashboardClientsClientIdRoute,
       DashboardClientsAddClientRoute,
       DashboardClientsAddFileRoute,
+      DashboardClientsViewFileRoute,
       DashboardClientsIndexRoute,
     ]),
     DashboardDashboardLazyRoute,
