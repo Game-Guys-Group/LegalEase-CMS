@@ -55,7 +55,7 @@ start_backend() {
     cd backend
 
     if [ "$MODE" = "prod" ]; then
-			python3 -m uvicorn src.main:app
+			python3 -m uvicorn src.main:app --host "0.0.0.0"
 			echo "Backend started."
     else
 			uvicorn src.main:app --reload &
