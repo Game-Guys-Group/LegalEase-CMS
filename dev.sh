@@ -1,4 +1,4 @@
-#!/bin/env bash
+#!/bin/bash
 
 # Function to create virtual environment if not exists
 create_virtualenv() {
