@@ -6,21 +6,26 @@ from typing import Annotated, Optional
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.staticfiles import StaticFiles
-from starlette.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.templating import Jinja2Templates
-import requests
 
 from . import crud, models, schemas
 from .database import engine
+from .loader import ViteLoader
+from .settings import settings
 
 
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
-app.mount("/static", StaticFiles(directory="../frontend/"), name="static")
 
-MODE = "dev"
+
+if settings.mode == "dev":
+    app.mount("/static", StaticFiles(directory="../frontend/"), name="static")
+else:
+    app.mount("/static", StaticFiles(directory="../frontend/dist"), name="static")
+
+
 
 origins = [
     "http://localhost",
@@ -40,16 +45,20 @@ app.add_middleware(
 
 templates = Jinja2Templates(directory="src/templates")
 
+if settings.mode == "prod":
+    vite_loader = ViteLoader()
+    templates.env.globals['vite_asset'] = vite_loader.vite_asset
+
 
 @app.exception_handler(404)
 async def custom_404_handler(request, __):
-    if request.url.path.startswith("/dashboard"):
+    if any(request.url.path.startswith(x) for x in ["/dashboard", "/login", "signup"]):
         return RedirectResponse("/")
     return Response(status_code=404)
 
 @app.get("/")
 async def read_index(request: Request):
-    return templates.TemplateResponse(request = request, name="dev.html", context={"is_dev": MODE == "dev"})
+    return templates.TemplateResponse(request = request, name="dev.html", context={"is_dev": settings.mode == "dev"})
 
 
 # login/token route

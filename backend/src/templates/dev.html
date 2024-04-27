@@ -20,6 +20,8 @@
 
 	<script type="module" src="http://localhost:5173/@vite/client"></script>
 	<script type="module" src="http://localhost:5173/src/main.tsx"></script>
+	{% else %}
+		{{ vite_asset('src/main.tsx') }}
 	{% endif %}
 
 </body>

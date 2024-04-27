@@ -1,4 +1,6 @@
+import { useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { Input } from "@/components/ui/input";
 import { CardTitle, CardHeader, CardContent, Card } from "@/components/ui/card";
 import {
   ListCollapse,
@@ -6,6 +8,7 @@ import {
   CalendarSearchIcon,
   PlusIcon,
   UsersIcon,
+  Search,
 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar";
@@ -87,10 +90,18 @@ function Client({ name, email, phone, id }: ClientProps) {
   );
 }
 
-function ClientList() {
+function ClientList({ name_like }: { name_like: string }) {
+  console.log("fetching clients [ClientList]");
+  let query = "/user/clients/get";
+
+  if (name_like.length > 0) {
+    query += `name_like=${name_like}`;
+  }
+
   const { isPending, error, data } = useQuery({
-    queryKey: [],
+    queryKey: [name_like],
     queryFn: async () => {
+      console.log("fetching clients");
       const response = await fetch("/user/clients/get", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("auth_key")}`,
@@ -145,7 +156,7 @@ function ClientList() {
               )}
               {data &&
                 data.map((client: ClientProps) => (
-                  <Client key={client.email} {...client} />
+                  <Client key={client.id} {...client} />
                 ))}
             </tbody>
           </table>
@@ -156,13 +167,28 @@ function ClientList() {
 }
 
 function ClientIndex() {
+  const [name_like, setNameLike] = useState("");
+
   return (
     <div className="flex max-h-screen w-full flex-col">
-      <div className="w-full mb-8">
-        <h1 className="text-3xl font-bold">Clients</h1>
-        <p className="text-gray-500 dark:text-gray-400">
-          Manage your client information and cases.
-        </p>
+      <div className="w-full mb-8 flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold">Clients</h1>
+          <p className="text-gray-500 dark:text-gray-400">
+            Manage your client information and cases.
+          </p>
+        </div>
+
+        <div className="relative mx-8">
+          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Input
+            type="search"
+            placeholder="Search clients"
+            className="w-full appearance-none bg-background pl-8 shadow-none"
+            value={name_like}
+            onChange={(e) => setNameLike(e.target.value)}
+          />
+        </div>
       </div>
 
       <main className="flex flex-wrap h-full">
@@ -206,7 +232,7 @@ function ClientIndex() {
           </CardContent>
         </Card>
 
-        <ClientList />
+        <ClientList name_like={name_like} />
       </main>
     </div>
   );

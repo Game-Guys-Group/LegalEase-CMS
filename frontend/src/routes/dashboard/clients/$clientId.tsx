@@ -78,7 +78,7 @@ export default function Files() {
 function ViewClient() {
   const { clientId } = Route.useParams();
   const [client, setClient] = useState<Client | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [_error, setError] = useState<string | null>(null);
   const [isFetching, setIsFetching] = useState(false);
 
   useEffect(() => {
