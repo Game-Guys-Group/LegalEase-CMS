@@ -111,7 +111,6 @@ main() {
 					build_production
 					;;
         "run_prod")
-            create_virtualenv
             activate_virtualenv
             run_production
             ;;
