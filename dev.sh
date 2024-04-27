@@ -1,4 +1,4 @@
-#!/bin/env bash
+#!/bin/bash
 
 # Function to create virtual environment if not exists
 create_virtualenv() {
@@ -9,6 +9,8 @@ create_virtualenv() {
     else
         echo "Virtual environment already exists."
     fi
+
+		python -m ensurepip
 }
 
 # Function to activate the virtual environment
@@ -24,7 +26,7 @@ activate_virtualenv() {
 # Function to download dependencies
 download_deps() {
     cd backend
-    pip install -r requirements.txt
+    python -m pip install -r requirements.txt
     echo "Backend dependencies downloaded."
     cd ../frontend
     npm install
@@ -51,9 +53,27 @@ build_frontend() {
 # Function to start backend
 start_backend() {
     cd backend
-    uvicorn src.main:app --reload &
-    echo "Backend started."
+
+    if [ "$MODE" = "prod" ]; then
+			python3 -m uvicorn src.main:app --host "0.0.0.0"
+			echo "Backend started."
+    else
+			uvicorn src.main:app --reload &
+			echo "Backend started."
+    fi
     cd ..
+}
+
+
+#build production
+build_production() {
+		export MODE="prod"
+		export OPENAPI_URL=""
+
+		activate_virtualenv
+		download_deps
+		build_frontend
+		echo "production build done."
 }
 
 # Function to run in production mode
@@ -61,9 +81,6 @@ run_production() {
     export MODE="prod"
 		export OPENAPI_URL=""
 
-    activate_virtualenv
-    download_deps
-    build_frontend
     start_backend
     echo "Server running in production mode."
 }
@@ -88,13 +105,17 @@ main() {
             activate_virtualenv
             download_deps
             ;;
+				"build_prod")
+					create_virtualenv
+					activate_virtualenv
+					build_production
+					;;
         "run_prod")
-            create_virtualenv
             activate_virtualenv
             run_production
             ;;
         *)
-            echo "Usage: $0 {run_dev|download_deps|run_prod}"
+            echo "Usage: $0 {run_dev|download_deps|build_prod|run_prod}"
             exit 1
             ;;
     esac
