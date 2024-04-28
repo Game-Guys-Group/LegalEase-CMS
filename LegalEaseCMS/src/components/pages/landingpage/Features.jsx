@@ -2,7 +2,7 @@ import React from 'react';
 
 function Features() {
   return (
-    <section className="bg-white dark:bg-gray-900">
+    <section id='features' className="bg-white dark:bg-gray-900">
       <h2 className="mt-8 text-4xl tracking-tight text-center font-extrabold text-gray-900 dark:text-white">LegalEase Main Features</h2>
       <div className="gap-8 items-center py-8 px-4 mx-auto max-w-screen-xl xl:gap-16 md:grid md:grid-cols-2 sm:py-16 lg:px-6">
         
