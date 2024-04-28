@@ -91,18 +91,16 @@ function Client({ name, email, phone, id }: ClientProps) {
 }
 
 function ClientList({ name_like }: { name_like: string }) {
-  console.log("fetching clients [ClientList]");
   let query = "/user/clients/get";
 
   if (name_like.length > 0) {
-    query += `name_like=${name_like}`;
+    query += `?name_like=${name_like}`;
   }
 
   const { isPending, error, data } = useQuery({
     queryKey: [name_like],
     queryFn: async () => {
-      console.log("fetching clients");
-      const response = await fetch("/user/clients/get", {
+      const response = await fetch(query, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("auth_key")}`,
         },

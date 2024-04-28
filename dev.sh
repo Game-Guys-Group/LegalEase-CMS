@@ -9,8 +9,6 @@ create_virtualenv() {
     else
         echo "Virtual environment already exists."
     fi
-
-		python -m ensurepip
 }
 
 # Function to activate the virtual environment
@@ -55,11 +53,11 @@ start_backend() {
     cd backend
 
     if [ "$MODE" = "prod" ]; then
-			python3 -m uvicorn src.main:app --host "0.0.0.0"
-			echo "Backend started."
+        python3 -m uvicorn src.main:app --host "0.0.0.0"
+        echo "Backend started."
     else
-			uvicorn src.main:app --reload &
-			echo "Backend started."
+        uvicorn src.main:app --reload &
+        echo "Backend started."
     fi
     cd ..
 }
@@ -67,19 +65,20 @@ start_backend() {
 
 #build production
 build_production() {
-		export MODE="prod"
-		export OPENAPI_URL=""
+    export MODE="prod"
+    export OPENAPI_URL=""
+    export DOCS_URL=""
 
-		activate_virtualenv
-		download_deps
-		build_frontend
-		echo "production build done."
+    activate_virtualenv
+    download_deps
+    build_frontend
+    echo "production build done."
 }
 
 # Function to run in production mode
 run_production() {
     export MODE="prod"
-		export OPENAPI_URL=""
+    export OPENAPI_URL=""
 
     start_backend
     echo "Server running in production mode."
@@ -89,6 +88,7 @@ run_production() {
 main() {
     case "$1" in
         "run_dev")
+            export ENABLE_VENV="true"
             create_virtualenv
             activate_virtualenv
             download_deps
@@ -105,11 +105,11 @@ main() {
             activate_virtualenv
             download_deps
             ;;
-				"build_prod")
-					create_virtualenv
-					activate_virtualenv
-					build_production
-					;;
+        "build_prod")
+            create_virtualenv
+            activate_virtualenv
+            build_production
+            ;;
         "run_prod")
             activate_virtualenv
             run_production

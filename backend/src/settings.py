@@ -8,7 +8,8 @@ class Settings(BaseSettings):
     static_url: str = "/static/"
     sqlalchemy_database_url: str = "sqlite:///./sql_app.db"
     mode: str = "dev"
-    openapi_url: str = "/docs"
+    openapi_url: str = "/openapi.json"
+    docs_url: str = "/docs"
 
 
 settings = Settings()

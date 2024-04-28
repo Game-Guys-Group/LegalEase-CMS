@@ -16,7 +16,7 @@ from .settings import settings
 
 
 models.Base.metadata.create_all(bind=engine)
-app = FastAPI(openapi_url=settings.openapi_url)
+app = FastAPI(openapi_url=settings.openapi_url, docs_url=settings.docs_url)
 
 
 

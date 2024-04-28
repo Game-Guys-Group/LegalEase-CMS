@@ -113,9 +113,6 @@ def update_user(db: Session, user: schemas.UserUpdate, current_user: models.User
     db.refresh(db_user)
     return db_user
 
-
-
-
 def create_client(db: Session, client: schemas.ClientCreate, user: models.User) -> models.Client:
     db_client = models.Client(email=client.email, id_number=client.id_number, name=client.name, phone=client.phone, owner=user)
     db.add(db_client)
@@ -135,6 +132,7 @@ def get_clients(
     name_filter = models.Client.name.like(f"%{name_like.strip()}%") if name_like else None
     email_filter = models.Client.email.like(f"%{email_like.strip()}%") if email_like else None
     filters = [f for f in [name_filter, email_filter] if f is not None]
+
 
     return (db.query(models.Client)
         .filter(models.Client.owner == user, *filters)
