@@ -20,7 +20,7 @@ function Hero() {
         <div className="lg:w-1/2">
             <div className="w-full p-6 space-y-8 sm:p-8 bg-white rounded-lg shadow-xl dark:bg-gray-800">
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                    Sign in to LegalLease
+                    Sign in to LegalEase
                 </h2>
                 <form className="mt-8 space-y-6" action="#">
                     <div>

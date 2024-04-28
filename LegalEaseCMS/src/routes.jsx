@@ -3,6 +3,7 @@ import CMSdashboard from "./app/dashboard/CMSdashboard";
 import LandingPage from "./app/landingpage/LandingPage";
 import NoPage from "./components/pages/NoPage";
 import { Navigate } from "react-router-dom";
+import Register from './components/pages/landingpage/Register';
 
 const appRoutes = [
     {
@@ -28,6 +29,10 @@ const appRoutes = [
     {
         path: '/app/*', // Catch-all for app routes
         element: <Navigate to="/404" />,
+    },
+    {
+        path: '/contact', // Catch-all for app routes
+        component: {Register},
     },
 ];
 
