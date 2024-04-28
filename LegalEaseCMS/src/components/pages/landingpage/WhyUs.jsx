@@ -2,7 +2,7 @@ import React from 'react'
 
 function WhyUs() {
     return (
-        <div className="dark:bg-gray-900">
+        <div id='whyus' className="dark:bg-gray-900">
             <div className="bg-gray-100 dark:bg-gray-800">
                 <div className="container px-4 mx-auto max-w-screen-xl pt-20 pb-8 mx-auto w-full text-center">
                     <h1 className="mb-4 p-4 text-3xl font-extrabold tracking-tight leading-none text-gray-900 md:text-3xl lg:text-4xl dark:text-white">Why Choose LegalEase CMS?</h1>
