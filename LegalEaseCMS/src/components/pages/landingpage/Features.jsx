@@ -3,7 +3,7 @@ import React from 'react';
 function Features() {
   return (
     <section id='features' className="bg-white dark:bg-gray-900">
-      <h2 className="mt-8 text-4xl tracking-tight text-center font-extrabold text-gray-900 dark:text-white">LegalEase Main Features</h2>
+      <h2 className="pt-8 text-4xl tracking-tight text-center font-extrabold text-gray-900 dark:text-white">LegalEase Main Features</h2>
       <div className="gap-8 items-center py-8 px-4 mx-auto max-w-screen-xl xl:gap-16 md:grid md:grid-cols-2 sm:py-16 lg:px-6">
         
         <img className="w-full dark:hidden" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/cta/cta-dashboard-mockup.svg" alt="dashboard image" />
@@ -18,11 +18,11 @@ function Features() {
               <dt className="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Top-Tier Security</dt>
               <dd className="text-lg font-semibold">Robust security measures to protect sensitive information</dd>
             </div>
-            <div className="flex flex-col pt-3">
+            <div className="flex flex-col py-3">
               <dt className="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Customizable Templates</dt>
               <dd className="text-lg font-semibold">Adapt to your specific legal needs with customizable templates.</dd>
             </div>
-            <div className="flex flex-col pt-3">
+            <div className="flex flex-col py-3">
               <dt className="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Real-Time Collaboration</dt>
               <dd className="text-lg font-semibold">Collaborate with your team in real-time, enhancing productivity.</dd>
             </div>

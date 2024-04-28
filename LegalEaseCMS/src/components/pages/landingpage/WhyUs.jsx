@@ -4,7 +4,7 @@ function WhyUs() {
     return (
         <div id='whyus' className="dark:bg-gray-900">
             <div className="bg-gray-100 dark:bg-gray-800">
-                <div className="container px-4 mx-auto max-w-screen-xl pt-20 pb-8 mx-auto w-full text-center">
+                <div className="container px-4 mx-auto max-w-screen-xl pt-20 pb-20 mx-auto w-full text-center">
                     <h1 className="mb-4 p-4 text-3xl font-extrabold tracking-tight leading-none text-gray-900 md:text-3xl lg:text-4xl dark:text-white">Why Choose LegalEase CMS?</h1>
                     <div className="px-8 gap-4 lg:grid-cols-3 grid md:grid-cols-2 mt-4 md:mt-4 flex flex-wrap justify-center" >
                         <div className="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-900 dark:border-gray-700">

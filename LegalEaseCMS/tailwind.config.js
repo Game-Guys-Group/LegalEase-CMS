@@ -59,5 +59,6 @@ module.exports = {
       }
     },
   },
-  darkMode: 'class', // Moved this outside of the theme object
+  lightMode: 'class', // Moved this outside of the theme object
+  // darkMode: 'class', // Moved this outside of the theme object
 }

@@ -9,7 +9,6 @@ import Register from '../../components/pages/landingpage/Register'
 function LandingPage() {
   return (
     <>
-    <Navbar />
     <Hero />
     <WhyUs />
     <Features />
