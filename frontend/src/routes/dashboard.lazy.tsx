@@ -1,22 +1,18 @@
-import { createLazyFileRoute } from '@tanstack/react-router'
-import { Toaster } from "@/components/ui/toaster"
+import { createLazyFileRoute } from "@tanstack/react-router";
+import { Toaster } from "@/components/ui/toaster";
 
-import {
-  Home,
-  LineChart,
-  Users,
-} from "lucide-react"
+import { Home, LineChart, Users } from "lucide-react";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 
-import { Link, Outlet, useRouterState } from '@tanstack/react-router'
+import { Link, Outlet, useRouterState } from "@tanstack/react-router";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -24,22 +20,22 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
+} from "@/components/ui/breadcrumb";
 
-function splitPath(path: string): Array<Array<string>>{
-  const splits = path.split("/").filter((p) => p !== "")
-  const paths = []
+function splitPath(path: string): Array<Array<string>> {
+  const splits = path.split("/").filter((p) => p !== "");
+  const paths = [];
 
-  for(let i = 0; i < splits.length; i++) {
-    paths.push([splits[i], `/${splits.slice(0, i + 1).join("/")}`])
+  for (let i = 0; i < splits.length; i++) {
+    paths.push([splits[i], `/${splits.slice(0, i + 1).join("/")}`]);
   }
 
-  return paths
+  return paths;
 }
 
 function NavBreadcrumb() {
-  const router = useRouterState()
-  const paths = splitPath(router.location.pathname)
+  const router = useRouterState();
+  const paths = splitPath(router.location.pathname);
 
   return (
     <Breadcrumb>
@@ -47,30 +43,30 @@ function NavBreadcrumb() {
         {paths.map((path, index) => {
           return (
             <>
-            { index != paths.length - 1 ?
-              (
-              <BreadcrumbItem key={index}>
-                <BreadcrumbLink >
-                  <Link to={path[1]}> {path[0]} </Link>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              ) : (<BreadcrumbPage>{path[0]}</BreadcrumbPage>)
-            }
+              {index != paths.length - 1 ? (
+                <BreadcrumbItem key={index}>
+                  <BreadcrumbLink>
+                    <Link to={path[1]}> {path[0]} </Link>
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+              ) : (
+                <BreadcrumbPage>{path[0]}</BreadcrumbPage>
+              )}
 
-             { index != paths.length - 1 && <BreadcrumbSeparator/> }
+              {index != paths.length - 1 && <BreadcrumbSeparator />}
             </>
-          )
+          );
         })}
       </BreadcrumbList>
     </Breadcrumb>
-  )
+  );
 }
 
 export function Dashboard() {
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
       <div className="hidden border-r  border-t bg-muted/40 md:block">
-        <div className="flex max-h-screen flex-col gap-2">
+        <div className="flex max-h-screen flex-col justify-between gap-2">
           <div className="flex-1">
             <nav className="grid items-start mt-4 px-2 text-sm font-medium lg:px-4">
               <Link
@@ -115,19 +111,18 @@ export function Dashboard() {
         </div>
       </div>
       <div className="flex flex-col">
-      <div className='p-2'>
-          <NavBreadcrumb/>
-      </div>
+        <div className="p-2">
+          <NavBreadcrumb />
+        </div>
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
           <Outlet />
-          <Toaster/>
+          <Toaster />
         </main>
       </div>
     </div>
-  )
+  );
 }
 
-
-export const Route = createLazyFileRoute('/dashboard')({
-  component: Dashboard
-})
+export const Route = createLazyFileRoute("/dashboard")({
+  component: Dashboard,
+});

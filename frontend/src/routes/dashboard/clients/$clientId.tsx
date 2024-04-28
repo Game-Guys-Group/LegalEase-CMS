@@ -10,6 +10,8 @@ import {
   Table,
 } from "@/components/ui/table";
 
+import { useAuth, FileProps, map_file_data } from "@/api-helper";
+
 export const Route = createFileRoute("/dashboard/clients/$clientId")({
   component: ViewClient,
 });
@@ -22,54 +24,60 @@ interface Client {
   id_number: string;
 }
 
-export default function Files() {
+function File({
+  id,
+  caseId,
+  description,
+  courtStation,
+  typeOfCase,
+}: FileProps) {
+  const navigate = Route.useNavigate();
+  return (
+    <TableRow
+      onClick={() => {
+        navigate({
+          to: "/dashboard/clients/client/$fileId",
+          params: { fileId: String(id) },
+        });
+      }}
+    >
+      <TableCell className="font-medium">{caseId}</TableCell>
+      <TableCell>{description}</TableCell>
+      <TableCell>{courtStation}</TableCell>
+      <TableCell>{typeOfCase}</TableCell>
+    </TableRow>
+  );
+}
+
+export default function Files({ clientId }: { clientId: number }) {
+  const { error, isFetching, getData } = useAuth<FileProps[]>({
+    url: `/files/get/${clientId}`,
+    parseFn: map_file_data,
+  });
+
+  const [data, setData] = useState<FileProps[] | null>(null);
+
+  useEffect(() => {
+    getData().then((data) => {
+      setData(data);
+    });
+  }, [clientId]);
+
   return (
     <Table>
       <TableHeader>
         <TableRow>
           <TableHead>Case ID</TableHead>
-          <TableHead className="text-center">Client ID</TableHead>
           <TableHead>Description</TableHead>
           <TableHead>Court Station</TableHead>
           <TableHead>Type of Case</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        <TableRow>
-          <TableCell className="font-medium">C001</TableCell>
-          <TableCell className="text-center">101</TableCell>
-          <TableCell>Contract Dispute</TableCell>
-          <TableCell>Station 1</TableCell>
-          <TableCell>Small Claims</TableCell>
-        </TableRow>
-        <TableRow>
-          <TableCell className="font-medium">C002</TableCell>
-          <TableCell className="text-center">102</TableCell>
-          <TableCell>Property Rights</TableCell>
-          <TableCell>Station 2</TableCell>
-          <TableCell>Family Law</TableCell>
-        </TableRow>
-        <TableRow>
-          <TableCell className="font-medium">C003</TableCell>
-          <TableCell className="text-center">103</TableCell>
-          <TableCell>Employment Dispute</TableCell>
-          <TableCell>Station 3</TableCell>
-          <TableCell>Labor Law</TableCell>
-        </TableRow>
-        <TableRow>
-          <TableCell className="font-medium">C004</TableCell>
-          <TableCell className="text-center">104</TableCell>
-          <TableCell>Personal Injury</TableCell>
-          <TableCell>Station 4</TableCell>
-          <TableCell>Medical Malpractice</TableCell>
-        </TableRow>
-        <TableRow>
-          <TableCell className="font-medium">C005</TableCell>
-          <TableCell className="text-center">105</TableCell>
-          <TableCell>Criminal Defense</TableCell>
-          <TableCell>Station 5</TableCell>
-          <TableCell>Public Defender</TableCell>
-        </TableRow>
+        {isFetching && <div>Loading...</div>}
+        {error && <div>{error}</div>}
+        {data &&
+          data.map((file: FileProps) => <File key={file.id} {...file} />)}
       </TableBody>
     </Table>
   );
@@ -176,7 +184,7 @@ function ViewClient() {
             </TabsContent>
 
             <TabsContent className="p-6" value="files">
-              <Files />
+              <Files clientId={Number(clientId)} />
             </TabsContent>
           </Tabs>
         </div>

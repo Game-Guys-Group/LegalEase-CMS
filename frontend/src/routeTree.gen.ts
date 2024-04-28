@@ -18,6 +18,7 @@ import { Route as DashboardClientsViewFileImport } from './routes/dashboard/clie
 import { Route as DashboardClientsAddFileImport } from './routes/dashboard/clients/add-file'
 import { Route as DashboardClientsAddClientImport } from './routes/dashboard/clients/add-client'
 import { Route as DashboardClientsClientIdImport } from './routes/dashboard/clients/$clientId'
+import { Route as DashboardClientsClientFileIdImport } from './routes/dashboard/clients/client/$fileId'
 
 // Create Virtual Routes
 
@@ -105,6 +106,12 @@ const DashboardClientsClientIdRoute = DashboardClientsClientIdImport.update({
   getParentRoute: () => DashboardClientsLazyRoute,
 } as any)
 
+const DashboardClientsClientFileIdRoute =
+  DashboardClientsClientFileIdImport.update({
+    path: '/client/$fileId',
+    getParentRoute: () => DashboardClientsLazyRoute,
+  } as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -161,6 +168,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardClientsIndexImport
       parentRoute: typeof DashboardClientsLazyImport
     }
+    '/dashboard/clients/client/$fileId': {
+      preLoaderRoute: typeof DashboardClientsClientFileIdImport
+      parentRoute: typeof DashboardClientsLazyImport
+    }
   }
 }
 
@@ -178,6 +189,7 @@ export const routeTree = rootRoute.addChildren([
       DashboardClientsAddFileRoute,
       DashboardClientsViewFileRoute,
       DashboardClientsIndexRoute,
+      DashboardClientsClientFileIdRoute,
     ]),
     DashboardDashboardLazyRoute,
   ]),

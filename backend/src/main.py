@@ -174,6 +174,14 @@ def get_files(
     ):
     return crud.get_files(db=db, user=current_user, client_id=client_id)
 
+@app.get("/file/get/{file_id}", response_model=schemas.File)
+def get_file(
+    file_id: int,
+    current_user: models.User = Depends(crud.get_current_user),
+    db: Session = Depends(crud.get_db)
+    ):
+    return crud.get_file(db=db, user=current_user, file_id=file_id)
+
 @app.post("/files/attachments/create")
 def create_attachment(
     attachment: UploadFile,

@@ -199,6 +199,17 @@ def get_files(db: Session, user: models.User, client_id: int) -> List[models.Fil
 
     return db.query(models.File).filter(models.File.client_id == client_id).all()
 
+def get_file(db: Session, user: models.User, file_id: int) -> models.File:
+    file = db.query(models.File).filter(models.File.id == file_id).first()
+    if not file:
+        raise HTTPException(status_code=404, detail="File not found")
+    client = db.query(models.Client).filter(models.Client.id == file.client_id).first()
+    if not client:
+        raise HTTPException(status_code=401, detail="unauthorized access")
+    if client.owner != user:
+        raise HTTPException(status_code=401, detail="unauthorized access")
+    return file
+
 
 def create_attachment(db: Session, attachment: UploadFile, current_user: models.Client, file_id: int) -> models.Attachment:
     #TODO: Save the file to the server and return the url
