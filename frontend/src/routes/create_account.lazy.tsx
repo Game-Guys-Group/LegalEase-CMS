@@ -72,7 +72,7 @@ function CreateAccount() {
   return (
     <Card className="mt-16 mx-auto max-w-sm">
       <CardHeader>
-        <CardTitle className="text-xl">Sign Up</CardTitle>
+        <CardTitle className="text-xl">Sign Up to LegalEase</CardTitle>
         <CardDescription>
           Enter your information to create an account
         </CardDescription>
@@ -90,11 +90,11 @@ function CreateAccount() {
               required
             />
           </div>
-          <div className="grid gap-2 mb-16">
+          <div className="grid gap-2 mb-6">
             <Label htmlFor="password">Password</Label>
             <Input id="password" onChange={e => setPassword(e.target.value)} type="password" />
           </div>
-          <Button type="submit"  disabled={isLoading} className="w-full" onClick={() => handle_submit()}>
+          <Button type="submit"  disabled={isLoading} className="w-full inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900" onClick={() => handle_submit()}>
             {isLoading  ?
               (<div className="border-b-secondary-foreground h-5 w-5 animate-spin rounded-full border-2 border-t-primary-foreground"/>) : "Sign Up" }
           </Button>

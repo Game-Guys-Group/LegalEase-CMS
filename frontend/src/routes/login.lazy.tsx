@@ -64,7 +64,7 @@ export function LoginForm() {
               onChange={e => setEmail(e.target.value)}
             />
           </div>
-          <div className="grid gap-2 mb-16">
+          <div className="grid gap-2 mb-6">
             <div className="flex items-center">
               <Label htmlFor="password">Password</Label>
               <Link href="#" className="ml-auto inline-block text-sm underline">
@@ -73,7 +73,7 @@ export function LoginForm() {
             </div>
             <Input id="password" type="password" onChange={e => setPassword(e.target.value)} required />
           </div>
-          <Button type="submit" onClick={handleSubmit} className="w-full">
+          <Button type="submit" onClick={handleSubmit} className="w-full inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900">
             {isSubmitting ?
               (<div className="border-b-secondary-foreground h-5 w-5 animate-spin rounded-full border-2 border-t-primary-foreground"/>) : "Login" }
           </Button>
