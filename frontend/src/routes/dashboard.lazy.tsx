@@ -92,9 +92,9 @@ export function Dashboard() {
               </Link>
             </nav>
           </div>
-          <div className="mt-auto p-4">
-            <Card x-chunk="dashboard-02-chunk-0">
-              <CardHeader className="p-2 pt-0 md:p-4">
+          <div className="fixed mt-auto p-4 bottom-0 w-60 md:w-50 left-0">
+            <Card x-chunk="dashboard-02-chunk-0" >
+              <CardHeader className="p-2 pt-0 md:p-4"> 
                 <CardTitle>Upgrade to Pro</CardTitle>
                 <CardDescription>
                   Unlock all features and get unlimited access to our support

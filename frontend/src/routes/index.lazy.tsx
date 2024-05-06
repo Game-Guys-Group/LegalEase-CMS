@@ -3,6 +3,7 @@ import { createLazyFileRoute } from '@tanstack/react-router'
 
 import { useNavigate } from '@tanstack/react-router'
 import { LoginForm } from './login.lazy'
+import { DashboardSet } from '../assets/storysetdashboard.svg'
 
 export const Route = createLazyFileRoute('/')({
   component: Index
@@ -131,7 +132,7 @@ function Index() {
           <div className="sm:flex sm:items-center sm:justify-between">
             <a href="/" className="flex items-center mb-4 sm:mb-0 space-x-3 rtl:space-x-reverse">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-scale inline"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"></path><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"></path><path d="M7 21h10"></path><path d="M12 3v18"></path><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"></path></svg>
-              <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">LegalEase CMS</span>
+              <span className="self-center text-2xl font-bold font-mono whitespace-nowrap dark:text-white">LegalEase CMS</span>
             </a>
             <ul className="flex flex-wrap items-center mb-6 text-sm font-medium text-gray-500 sm:mb-0 dark:text-gray-400">
               <li>

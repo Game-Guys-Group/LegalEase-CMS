@@ -70,7 +70,7 @@ function CreateAccount() {
   // })
 
   return (
-    <Card className="mt-16 mx-auto max-w-sm">
+    <Card className="mt-16 mx-auto max-w-sm bg-white border-gray-200 dark:bg-gray-800 dark:border-gray-700">
       <CardHeader>
         <CardTitle className="text-xl">Sign Up to LegalEase</CardTitle>
         <CardDescription>
