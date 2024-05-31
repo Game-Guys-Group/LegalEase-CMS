@@ -116,9 +116,9 @@ function ClientList({ name_like }: { name_like: string }) {
   });
 
   return (
-    <div className="container mx-auto px-4 md:px-6 lg:px-8 flex-1">
-      <div className="bg-background rounded-lg shadow-md overflow-hidden">
-        <ScrollArea className="rounded-md h-96 border p-4">
+    <div className="container mx-auto px-4 md:px-6 lg:px-8  max-h-[600px] flex-1">
+      <div className="bg-background rounded-lg shadow-md h-full overflow-hidden">
+        <ScrollArea className="rounded-md h-full  border p-4">
           <table className="w-full table-auto">
             <thead className="bg-muted/40">
               <tr>
@@ -189,14 +189,14 @@ function ClientIndex() {
         </div>
       </div>
 
-      <main className="flex flex-wrap h-full">
-        <Card className="flex flex-col items-center h-96">
+      <main className="flex flex-wrap">
+        <Card className="flex w-full md:w-auto flex-col items-center">
           <CardHeader>
             <CardTitle>Tools</CardTitle>
           </CardHeader>
 
           <CardContent>
-            <div className="flex sm:flex-row md:flex-col">
+            <div className="flex flex-row md:flex-col">
               <Link
                 className="flex flex-col items-center gap-1 p-2 rounded-md hover:bg-muted"
                 to="/dashboard/clients/add-file"
