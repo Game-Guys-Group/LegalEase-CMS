@@ -24,7 +24,7 @@ activate_virtualenv() {
 # Function to download dependencies
 download_deps() {
     cd backend
-    python -m pip install -r requirements.txt
+    python -m pip install -r ../requirements.txt
     echo "Backend dependencies downloaded."
     cd ../frontend
     npm install
