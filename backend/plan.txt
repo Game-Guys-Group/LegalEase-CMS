@@ -1,0 +1,29 @@
+User (lawyer)
+email, name, password
+
+Client
+name
+
+File
+phone number, email, case id, description, court station, type of case
+
+Attachments
+files
+
+specification
+
+User
+create(email, name, password) -> User
+update()
+login(email, password) -> token
+
+Client
+create(token, User, email, phone)
+get_all(token, User) -> list[Client]
+get_files(token, User) -> list[MiniFile]
+get_file(token, User, id) -> File
+
+File
+create(token, User, case id, description, court_station, type of case) -> File
+update()
+
