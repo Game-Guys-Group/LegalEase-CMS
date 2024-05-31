@@ -1,6 +1,7 @@
 from pydantic_settings import BaseSettings
 import os
 
+
 class Settings(BaseSettings):
     secret_key: str = str(os.urandom(32))
     algorithm: str = "HS256"
