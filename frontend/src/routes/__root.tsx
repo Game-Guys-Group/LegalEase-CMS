@@ -16,7 +16,7 @@ import {
 export const Route = createRootRoute({
   component: () => {
     return (
-      <div className="max-w-screen-4xl">
+      <div className="max-w-screen-4xl min-h-screen">
         <div className="px-10 flex gap-2 items-center justify-between h-14 fixed w-full top-0 left-0 bg-muted/40">
           <div className="flex w-full items-center">
             <div className="flex items-center justify-between px-4 py-2">

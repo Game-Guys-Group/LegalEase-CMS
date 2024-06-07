@@ -1,177 +1,77 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { createLazyFileRoute, Link } from "@tanstack/react-router";
+import { CardContent, Card } from "@/components/ui/card";
+import { Briefcase, DollarSign, Users } from "lucide-react";
 import {
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@radix-ui/react-dropdown-menu";
-import { createLazyFileRoute } from "@tanstack/react-router";
-import {
-  Badge,
-  CalendarIcon,
-  FileIcon,
-  FilterIcon,
-  MoveHorizontalIcon,
   PlusIcon,
-  Table,
   UsersIcon,
+  UploadIcon,
+  CalendarSearchIcon,
 } from "lucide-react";
 
 export function Dashboard() {
   return (
-    <main className="flex-1 p-6">
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        <Card>
-          <CardHeader className="flex items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Total Clients</CardTitle>
-            <UsersIcon className="h-4 w-4 text-gray-500 dark:text-gray-400" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">234</div>
-            <p className="text-xs text-gray-500 dark:text-gray-400">
-              +12% from last month
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Active Cases</CardTitle>
-            <FileIcon className="h-4 w-4 text-gray-500 dark:text-gray-400" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">78</div>
-            <p className="text-xs text-gray-500 dark:text-gray-400">
-              +5% from last month
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">
-              Upcoming Appointments
-            </CardTitle>
-            <CalendarIcon className="h-4 w-4 text-gray-500 dark:text-gray-400" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">12</div>
-            <p className="text-xs text-gray-500 dark:text-gray-400">
-              +3 from last week
-            </p>
-          </CardContent>
-        </Card>
+    <main className="container mx-auto w-full  px-4 md:px-6 lg:px-8">
+      <div>
+        <h1 className="text-4xl font-bold">Dashboard</h1>
+        <p className="text-gray-500 dark:text-gray-400">
+          welcome to your dashboard
+        </p>
       </div>
-      <div className="mt-6">
-        <Card>
-          <CardHeader className="flex items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Recent Cases</CardTitle>
-            <div className="flex items-center gap-2">
-              <Button variant="ghost" size="icon">
-                <FilterIcon className="h-4 w-4" />
-                <span className="sr-only">Filter</span>
-              </Button>
-              <Button variant="ghost" size="icon">
-                <PlusIcon className="h-4 w-4" />
-                <span className="sr-only">Add Case</span>
-              </Button>
-            </div>
-          </CardHeader>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-[100px]">Case ID</TableHead>
-                <TableHead>Client</TableHead>
-                <TableHead className="hidden md:table-cell">Status</TableHead>
-                <TableHead className="hidden md:table-cell">Due Date</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell className="font-medium">#12345</TableCell>
-                <TableCell>John Doe</TableCell>
-                <TableCell className="hidden md:table-cell">
-                  <Badge>Open</Badge>
-                </TableCell>
-                <TableCell className="hidden md:table-cell">
-                  June 15, 2023
-                </TableCell>
-                <TableCell className="text-right">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon">
-                        <MoveHorizontalIcon className="h-4 w-4" />
-                        <span className="sr-only">Actions</span>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem>View Case</DropdownMenuItem>
-                      <DropdownMenuItem>Edit Case</DropdownMenuItem>
-                      <DropdownMenuItem>Close Case</DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="font-medium">#12346</TableCell>
-                <TableCell>Jane Smith</TableCell>
-                <TableCell className="hidden md:table-cell">
-                  <Badge>Pending</Badge>
-                </TableCell>
-                <TableCell className="hidden md:table-cell">
-                  July 1, 2023
-                </TableCell>
-                <TableCell className="text-right">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon">
-                        <MoveHorizontalIcon className="h-4 w-4" />
-                        <span className="sr-only">Actions</span>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem>View Case</DropdownMenuItem>
-                      <DropdownMenuItem>Edit Case</DropdownMenuItem>
-                      <DropdownMenuItem>Close Case</DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="font-medium">#12347</TableCell>
-                <TableCell>Michael Johnson</TableCell>
-                <TableCell className="hidden md:table-cell">
-                  <Badge>Closed</Badge>
-                </TableCell>
-                <TableCell className="hidden md:table-cell">
-                  May 30, 2023
-                </TableCell>
-                <TableCell className="text-right">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon">
-                        <MoveHorizontalIcon className="h-4 w-4" />
-                        <span className="sr-only">Actions</span>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem>View Case</DropdownMenuItem>
-                      <DropdownMenuItem>Reopen Case</DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </Card>
+
+      <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="col-span-1 rounded-lg border  p-6 shadow-sm bg-muted/60">
+          <Users />
+          <h2 className="mt-2 text-xl font-semibold">Total Clients</h2>
+          <p className="mt-4">4</p>
+        </div>
+        <div className="col-span-1 rounded-lg border  p-6 shadow-sm bg-muted/60">
+          <Briefcase />
+          <h2 className="mt-2 text-lg font-semibold">Open Cases</h2>
+          <p className="mt-4">8</p>
+        </div>
+        <div className="col-span-1 rounded-lg border  p-6 shadow-sm bg-muted/60">
+          <DollarSign />
+          <h2 className="mt-2 text-lg font-semibold">Revenue</h2>
+          <p className="mt-4">$400,897</p>
+        </div>
       </div>
+
+      <h2 className="text-2xl font-bold mt-8 mb-4">Client Management</h2>
+      <Card className="flex items-center">
+        <CardContent className="w-full h-full flex items-center justify-center mt-4">
+          <div className="flex items-center justify-center w-full">
+            <Link
+              className="flex flex-col items-center gap-1 p-2 rounded-md hover:bg-muted"
+              to="/dashboard/clients/add-file"
+            >
+              <PlusIcon className="w-6 h-6" />
+              <span>New File</span>
+            </Link>
+            <Link
+              className="flex flex-col items-center gap-2 p-2 rounded-md hover:bg-muted"
+              to="/dashboard/clients/add-client"
+            >
+              <UsersIcon className="w-6 h-6" />
+              <span>Add Client</span>
+            </Link>
+
+            <Link
+              className="flex flex-col items-center gap-2 p-2 rounded-md hover:bg-muted"
+              href="#"
+            >
+              <UploadIcon className="w-6 h-6" />
+              <span>Upload Document</span>
+            </Link>
+            <Link
+              className="flex flex-col items-center gap-2 p-2 rounded-md hover:bg-muted"
+              href="#"
+            >
+              <CalendarSearchIcon className="w-6 h-6" />
+              <span>Calendar</span>
+            </Link>
+          </div>
+        </CardContent>
+      </Card>
     </main>
   );
 }

@@ -61,7 +61,7 @@ export default function Cal() {
             <h2 className="text-lg font-bold">Calendar</h2>
           </div>
 
-          <div className="mt-16">
+          <div className="mt-16 h-96">
             <h3 className="text-sm font-bold mb-2">Upcoming Appointments</h3>
             <div className="grid gap-4">
               <div className="flex items-center justify-between bg-gray-100 rounded-lg p-4">

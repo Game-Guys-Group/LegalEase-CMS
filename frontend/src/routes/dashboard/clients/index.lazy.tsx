@@ -168,7 +168,7 @@ function ClientIndex() {
   const [name_like, setNameLike] = useState("");
 
   return (
-    <div className="flex max-h-screen w-full flex-col">
+    <div className="flex h-screen min-h-screen w-full flex-col">
       <div className="w-full mb-8 flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">Clients</h1>
@@ -189,8 +189,8 @@ function ClientIndex() {
         </div>
       </div>
 
-      <main className="flex flex-wrap">
-        <Card className="flex w-full md:w-auto flex-col items-center">
+      <main className="flex flex-wrap h-full">
+        <Card className="flex w-full h-max md:w-auto flex-col items-center">
           <CardHeader>
             <CardTitle>Tools</CardTitle>
           </CardHeader>
@@ -221,7 +221,7 @@ function ClientIndex() {
               </Link>
               <Link
                 className="flex flex-col items-center gap-2 p-2 rounded-md hover:bg-muted"
-                href="#"
+                to="/dashboard/calender"
               >
                 <CalendarSearchIcon className="w-6 h-6" />
                 <span>Calendar</span>
