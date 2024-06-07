@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
 from . import models, schemas, database
-from typing import Optional, List
+from typing import Optional, List, cast
 
 from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
@@ -10,6 +10,9 @@ from datetime import datetime, timedelta, timezone
 from typing import Annotated
 
 from fastapi import Depends, HTTPException, UploadFile, status
+from typing import BinaryIO
+
+from .storage import file_store
 
 SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
 ALGORITHM = "HS256"
@@ -75,6 +78,7 @@ def get_current_user(
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         email: Optional[str] = payload.get("sub")
+
         if email is None:
             raise credentials_exception
 
@@ -87,8 +91,10 @@ def get_current_user(
         raise credentials_exception
 
     user = get_user_by_email(db, token_data.email)
+
     if user is None:
         raise credentials_exception
+
     return user
 
 
@@ -267,6 +273,7 @@ def create_attachment(
     db: Session, attachment: UploadFile, current_user: models.Client, file_id: int
 ) -> models.Attachment:
     # TODO: Save the file to the server and return the url
+
     file = db.query(models.File).filter(models.File.id == file_id).first()
 
     if not file:
@@ -280,7 +287,9 @@ def create_attachment(
     if client.owner != current_user:
         raise HTTPException(status_code=401, detail="unauthorized access")
 
-    db_attachment = models.Attachment(url="todo", file=file)
+    url = file_store.save(attachment)
+
+    db_attachment = models.Attachment(url=url, file=file)
     db.add(db_attachment)
     db.commit()
     db.refresh(db_attachment)
@@ -290,19 +299,32 @@ def create_attachment(
 def get_attachments(
     db: Session, user: models.User, file_id: int
 ) -> List[models.Attachment]:
-    file = db.query(models.File).filter(models.File.id == file_id).first()
+    file = get_file(db, user, file_id)
+    return file.attachments
+
+
+def get_attachment(
+    db: Session, user: models.User, attachment_id: int
+) -> tuple[str, str] | None:
+    attachment = (
+        db.query(models.Attachment)
+        .filter(models.Attachment.id == attachment_id)
+        .first()
+    )
+    if not attachment:
+        raise HTTPException(status_code=404, detail="Attachment not found")
+    file = db.query(models.File).filter(models.File.id == attachment.file_id).first()
 
     if not file:
-        raise HTTPException(status_code=404, detail="File not found")
+        raise HTTPException(status_code=401, detail="unauthorized access")
     client = db.query(models.Client).filter(models.Client.id == file.client_id).first()
     if not client:
         raise HTTPException(status_code=401, detail="unauthorized access")
     if client.owner != user:
         raise HTTPException(status_code=401, detail="unauthorized access")
-    return (
-        db.query(models.Attachment).filter(models.Attachment.file_id == file_id).all()
-    )
+
+    return file_store.load(cast(str, attachment.url))
 
 
-def upload_file(db: Session, file: UploadFile, user: models.User) -> models.File:
-    pass
+
+#events

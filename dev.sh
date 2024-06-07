@@ -24,9 +24,16 @@ activate_virtualenv() {
 # Function to download dependencies
 download_deps() {
     cd backend
-    python -m pip install -r ../requirements.txt
-    echo "Backend dependencies downloaded."
+
+    if [ "$DOWNLOAD_DEPS" = "true" ]; then
+        python -m pip install -r ../requirements.txt
+        echo "Backend dependencies downloaded."
+    else
+        echo "Skip backend dependencies download."
+    fi
+
     cd ../frontend
+
     npm install
     echo "Frontend dependencies downloaded."
     cd ..
@@ -37,7 +44,7 @@ start_frontend() {
     cd frontend
     npm run dev &
     echo "Frontend started."
-		cd ..
+    cd ..
 }
 
 # Function to build frontend for production
@@ -51,12 +58,13 @@ build_frontend() {
 # Function to start backend
 start_backend() {
     cd backend
+    alembic upgrade head
 
     if [ "$MODE" = "prod" ]; then
         python3 -m uvicorn src.main:app --host "0.0.0.0"
         echo "Backend started."
     else
-        uvicorn src.main:app --reload &
+        uvicorn src.main:app --reload  &
         echo "Backend started."
     fi
     cd ..
@@ -89,6 +97,7 @@ main() {
     case "$1" in
         "run_dev")
             export ENABLE_VENV="true"
+            export DOWNLOAD_DEPS="true"
             create_virtualenv
             activate_virtualenv
             download_deps
@@ -106,6 +115,7 @@ main() {
             download_deps
             ;;
         "build_prod")
+            export DOWNLOAD_DEPS="true"
             create_virtualenv
             activate_virtualenv
             build_production

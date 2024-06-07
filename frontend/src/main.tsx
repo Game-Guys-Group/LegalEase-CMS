@@ -1,27 +1,29 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import 'vite/modulepreload-polyfill'
-import './globals.css'
-import { ThemeProvider } from '@/components/theme-provider'
-import { RouterProvider, createRouter } from '@tanstack/react-router'
-import { routeTree } from './routeTree.gen'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "vite/modulepreload-polyfill";
+import "./globals.css";
+import { ThemeProvider } from "@/components/theme-provider";
+import { RouterProvider, createRouter } from "@tanstack/react-router";
+import { routeTree } from "./routeTree.gen";
+import { pdfjs } from "react-pdf";
 
-const router = createRouter({ routeTree })
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+  "pdfjs-dist/build/pdf.worker.min.mjs",
+  import.meta.url,
+).toString();
 
-declare module '@tanstack/react-router' {
+const router = createRouter({ routeTree });
+
+declare module "@tanstack/react-router" {
   interface Register {
-    router: typeof router
+    router: typeof router;
   }
 }
-import {
-  QueryClient,
-  QueryClientProvider,
-} from '@tanstack/react-query'
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient();
 
-
-ReactDOM.createRoot(document.getElementById('root')!).render(
+ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <QueryClientProvider client={queryClient}>
@@ -29,4 +31,4 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       </QueryClientProvider>
     </ThemeProvider>
   </React.StrictMode>,
-)
+);

@@ -14,6 +14,7 @@ class User(Base):
 
     items = relationship("Client", back_populates="owner")
 
+
 class Client(Base):
     __tablename__ = "clients"
 
@@ -27,6 +28,9 @@ class Client(Base):
 
     owner_id = Column(Integer, ForeignKey("users.id"))
     owner = relationship("User", back_populates="items")
+
+    events = relationship("Event", back_populates="client")
+
 
 class File(Base):
     __tablename__ = "files"
@@ -49,3 +53,13 @@ class Attachment(Base):
 
     file_id = Column(Integer, ForeignKey("files.id"))
     file = relationship("File", back_populates="attachments")
+
+
+class Event(Base):
+    __tablename__ = "events"
+    id = Column(Integer, primary_key=True)
+    date = Column(String)
+    time = Column(String)
+    description = Column(String)
+    client_id = Column(Integer, ForeignKey("clients.id"))
+    client = relationship("Client", back_populates="events")

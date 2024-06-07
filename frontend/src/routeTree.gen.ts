@@ -23,7 +23,7 @@ const AboutLazyImport = createFileRoute('/about')()
 const IndexLazyImport = createFileRoute('/')()
 const DashboardDashboardLazyImport = createFileRoute('/dashboard/dashboard')()
 const DashboardClientsLazyImport = createFileRoute('/dashboard/clients')()
-const DashboardAnalyticsLazyImport = createFileRoute('/dashboard/analytics')()
+const DashboardCalenderLazyImport = createFileRoute('/dashboard/calender')()
 const DashboardClientsIndexLazyImport = createFileRoute('/dashboard/clients/')()
 const DashboardClientsViewFileLazyImport = createFileRoute(
   '/dashboard/clients/view-file',
@@ -84,11 +84,11 @@ const DashboardClientsLazyRoute = DashboardClientsLazyImport.update({
   import('./routes/dashboard/clients.lazy').then((d) => d.Route),
 )
 
-const DashboardAnalyticsLazyRoute = DashboardAnalyticsLazyImport.update({
-  path: '/analytics',
+const DashboardCalenderLazyRoute = DashboardCalenderLazyImport.update({
+  path: '/calender',
   getParentRoute: () => DashboardLazyRoute,
 } as any).lazy(() =>
-  import('./routes/dashboard/analytics.lazy').then((d) => d.Route),
+  import('./routes/dashboard/calender.lazy').then((d) => d.Route),
 )
 
 const DashboardClientsIndexLazyRoute = DashboardClientsIndexLazyImport.update({
@@ -164,8 +164,8 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginLazyImport
       parentRoute: typeof rootRoute
     }
-    '/dashboard/analytics': {
-      preLoaderRoute: typeof DashboardAnalyticsLazyImport
+    '/dashboard/calender': {
+      preLoaderRoute: typeof DashboardCalenderLazyImport
       parentRoute: typeof DashboardLazyImport
     }
     '/dashboard/clients': {
@@ -210,7 +210,7 @@ export const routeTree = rootRoute.addChildren([
   AboutLazyRoute,
   CreateaccountLazyRoute,
   DashboardLazyRoute.addChildren([
-    DashboardAnalyticsLazyRoute,
+    DashboardCalenderLazyRoute,
     DashboardClientsLazyRoute.addChildren([
       DashboardClientsClientIdLazyRoute,
       DashboardClientsAddClientLazyRoute,

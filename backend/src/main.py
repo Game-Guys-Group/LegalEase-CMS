@@ -21,6 +21,7 @@ from . import crud, models, schemas
 from .database import engine
 from .loader import ViteLoader
 from .settings import settings
+from .storage import file_store
 import os
 
 
@@ -225,13 +226,14 @@ def get_file(
     return crud.get_file(db=db, user=current_user, file_id=file_id)
 
 
-@app.post("/files/attachments/create")
+@app.post("/files/attachments/create/{file_id}", response_model=schemas.Attachment)
 def create_attachment(
     attachment: UploadFile,
     file_id: int,
     current_user: models.User = Depends(crud.get_current_user),
     db: Session = Depends(crud.get_db),
 ):
+
     return crud.create_attachment(
         db=db, attachment=attachment, current_user=current_user, file_id=file_id
     )
@@ -243,4 +245,27 @@ def get_attachments(
     current_user: models.User = Depends(crud.get_current_user),
     db: Session = Depends(crud.get_db),
 ):
-    return crud.get_attachments(db=db, user=current_user, file_id=file_id)
+
+    return [
+        schemas.Attachment(
+            id=a.id, url=a.url, attachment_name=file_store.load(a.url)[0]
+        )
+        for a in crud.get_attachments(db=db, user=current_user, file_id=file_id)
+    ]
+
+
+@app.get("/file/attachment/get/{attachment_id}", response_model=schemas.Attachment)
+def get_attachment(
+    attachment_id: int,
+    current_user: models.User = Depends(crud.get_current_user),
+    db: Session = Depends(crud.get_db),
+):
+    at = crud.get_attachment(db=db, user=current_user, attachment_id=attachment_id)
+
+    if not at:
+        raise HTTPException(status_code=404, detail="Attachment not found")
+    f_name, path = at
+
+    return FileResponse(
+        path=path, media_type="application/octet-stream", filename=f_name
+    )

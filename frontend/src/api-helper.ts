@@ -24,6 +24,16 @@ export const map_file_data = (data: any) => {
   return data.map(map_file);
 };
 
+export async function getAuthToken(): Promise<string> {
+  const token = localStorage.getItem("auth_key");
+  if (token) {
+    return token;
+  }
+
+  //fail
+  return Promise.reject("No token found");
+}
+
 export async function login(
   email: string,
   password: string,
