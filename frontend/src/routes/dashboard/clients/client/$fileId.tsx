@@ -54,7 +54,7 @@ export default function Component() {
           </p>
         </div>
 
-        <div className="col-span-2 rounded-lg border  p-6 shadow-sm bg-muted/60">
+        <div className="md:col-span-2 sm:col-span-1 rounded-lg border  p-6 shadow-sm bg-muted/60">
           <h2 className="text-lg font-semibold">Description</h2>
           <p className="mt-2 text-gray-500 dark:text-gray-400">
             {data?.description}
