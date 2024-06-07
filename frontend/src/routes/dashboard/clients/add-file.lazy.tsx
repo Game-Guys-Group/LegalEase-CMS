@@ -109,7 +109,6 @@ function AddClient() {
         },
       );
 
-      console.log(cls);
       setClients(cls);
       if (cls.length == 0) {
         setClient("Please Add Clients");
@@ -195,13 +194,11 @@ function AddClient() {
                     onSubmit={form.handleSubmit(onSubmit)}
                     className="grid grid-cols-1 gap-6 sm:grid-cols-2"
                   >
-                    <div className="space-y-2">
+                    <div className="space-y-5 flex flex-col">
                       <Label> Client </Label>
                       <Combobox
-                        mode="single" //single or multiple
                         options={clients}
-                        placeholder="Select Client"
-                        selected={client} // string or array
+                        label="Client"
                         onChange={(value) => setClient(value)}
                       />
                     </div>

@@ -1,5 +1,5 @@
 import { createLazyFileRoute, Link } from "@tanstack/react-router";
-import { CardTitle, CardHeader, CardContent, Card } from "@/components/ui/card";
+import { CardContent, Card } from "@/components/ui/card";
 import { Briefcase, DollarSign, Users } from "lucide-react";
 import {
   PlusIcon,
@@ -7,8 +7,6 @@ import {
   UploadIcon,
   CalendarSearchIcon,
 } from "lucide-react";
-
-// import { Link} from '@tanstack/react-router'
 
 export function Dashboard() {
   return (

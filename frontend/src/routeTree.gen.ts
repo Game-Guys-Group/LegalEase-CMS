@@ -13,12 +13,6 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as DashboardClientsIndexImport } from './routes/dashboard/clients/index'
-import { Route as DashboardClientsViewFileImport } from './routes/dashboard/clients/view-file'
-import { Route as DashboardClientsAddFileImport } from './routes/dashboard/clients/add-file'
-import { Route as DashboardClientsAddClientImport } from './routes/dashboard/clients/add-client'
-import { Route as DashboardClientsClientIdImport } from './routes/dashboard/clients/$clientId'
-import { Route as DashboardClientsClientFileIdImport } from './routes/dashboard/clients/client/$fileId'
 
 // Create Virtual Routes
 
@@ -29,7 +23,23 @@ const AboutLazyImport = createFileRoute('/about')()
 const IndexLazyImport = createFileRoute('/')()
 const DashboardDashboardLazyImport = createFileRoute('/dashboard/dashboard')()
 const DashboardClientsLazyImport = createFileRoute('/dashboard/clients')()
-const DashboardAnalyticsLazyImport = createFileRoute('/dashboard/analytics')()
+const DashboardCalenderLazyImport = createFileRoute('/dashboard/calender')()
+const DashboardClientsIndexLazyImport = createFileRoute('/dashboard/clients/')()
+const DashboardClientsViewFileLazyImport = createFileRoute(
+  '/dashboard/clients/view-file',
+)()
+const DashboardClientsAddFileLazyImport = createFileRoute(
+  '/dashboard/clients/add-file',
+)()
+const DashboardClientsAddClientLazyImport = createFileRoute(
+  '/dashboard/clients/add-client',
+)()
+const DashboardClientsClientIdLazyImport = createFileRoute(
+  '/dashboard/clients/$clientId',
+)()
+const DashboardClientsClientFileIdLazyImport = createFileRoute(
+  '/dashboard/clients/client/$fileId',
+)()
 
 // Create/Update Routes
 
@@ -74,43 +84,61 @@ const DashboardClientsLazyRoute = DashboardClientsLazyImport.update({
   import('./routes/dashboard/clients.lazy').then((d) => d.Route),
 )
 
-const DashboardAnalyticsLazyRoute = DashboardAnalyticsLazyImport.update({
-  path: '/analytics',
+const DashboardCalenderLazyRoute = DashboardCalenderLazyImport.update({
+  path: '/calender',
   getParentRoute: () => DashboardLazyRoute,
 } as any).lazy(() =>
-  import('./routes/dashboard/analytics.lazy').then((d) => d.Route),
+  import('./routes/dashboard/calender.lazy').then((d) => d.Route),
 )
 
-const DashboardClientsIndexRoute = DashboardClientsIndexImport.update({
+const DashboardClientsIndexLazyRoute = DashboardClientsIndexLazyImport.update({
   path: '/',
   getParentRoute: () => DashboardClientsLazyRoute,
-} as any)
+} as any).lazy(() =>
+  import('./routes/dashboard/clients/index.lazy').then((d) => d.Route),
+)
 
-const DashboardClientsViewFileRoute = DashboardClientsViewFileImport.update({
-  path: '/view-file',
-  getParentRoute: () => DashboardClientsLazyRoute,
-} as any)
+const DashboardClientsViewFileLazyRoute =
+  DashboardClientsViewFileLazyImport.update({
+    path: '/view-file',
+    getParentRoute: () => DashboardClientsLazyRoute,
+  } as any).lazy(() =>
+    import('./routes/dashboard/clients/view-file.lazy').then((d) => d.Route),
+  )
 
-const DashboardClientsAddFileRoute = DashboardClientsAddFileImport.update({
-  path: '/add-file',
-  getParentRoute: () => DashboardClientsLazyRoute,
-} as any)
+const DashboardClientsAddFileLazyRoute =
+  DashboardClientsAddFileLazyImport.update({
+    path: '/add-file',
+    getParentRoute: () => DashboardClientsLazyRoute,
+  } as any).lazy(() =>
+    import('./routes/dashboard/clients/add-file.lazy').then((d) => d.Route),
+  )
 
-const DashboardClientsAddClientRoute = DashboardClientsAddClientImport.update({
-  path: '/add-client',
-  getParentRoute: () => DashboardClientsLazyRoute,
-} as any)
+const DashboardClientsAddClientLazyRoute =
+  DashboardClientsAddClientLazyImport.update({
+    path: '/add-client',
+    getParentRoute: () => DashboardClientsLazyRoute,
+  } as any).lazy(() =>
+    import('./routes/dashboard/clients/add-client.lazy').then((d) => d.Route),
+  )
 
-const DashboardClientsClientIdRoute = DashboardClientsClientIdImport.update({
-  path: '/$clientId',
-  getParentRoute: () => DashboardClientsLazyRoute,
-} as any)
+const DashboardClientsClientIdLazyRoute =
+  DashboardClientsClientIdLazyImport.update({
+    path: '/$clientId',
+    getParentRoute: () => DashboardClientsLazyRoute,
+  } as any).lazy(() =>
+    import('./routes/dashboard/clients/$clientId.lazy').then((d) => d.Route),
+  )
 
-const DashboardClientsClientFileIdRoute =
-  DashboardClientsClientFileIdImport.update({
+const DashboardClientsClientFileIdLazyRoute =
+  DashboardClientsClientFileIdLazyImport.update({
     path: '/client/$fileId',
     getParentRoute: () => DashboardClientsLazyRoute,
-  } as any)
+  } as any).lazy(() =>
+    import('./routes/dashboard/clients/client/$fileId.lazy').then(
+      (d) => d.Route,
+    ),
+  )
 
 // Populate the FileRoutesByPath interface
 
@@ -136,8 +164,8 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginLazyImport
       parentRoute: typeof rootRoute
     }
-    '/dashboard/analytics': {
-      preLoaderRoute: typeof DashboardAnalyticsLazyImport
+    '/dashboard/calender': {
+      preLoaderRoute: typeof DashboardCalenderLazyImport
       parentRoute: typeof DashboardLazyImport
     }
     '/dashboard/clients': {
@@ -149,27 +177,27 @@ declare module '@tanstack/react-router' {
       parentRoute: typeof DashboardLazyImport
     }
     '/dashboard/clients/$clientId': {
-      preLoaderRoute: typeof DashboardClientsClientIdImport
+      preLoaderRoute: typeof DashboardClientsClientIdLazyImport
       parentRoute: typeof DashboardClientsLazyImport
     }
     '/dashboard/clients/add-client': {
-      preLoaderRoute: typeof DashboardClientsAddClientImport
+      preLoaderRoute: typeof DashboardClientsAddClientLazyImport
       parentRoute: typeof DashboardClientsLazyImport
     }
     '/dashboard/clients/add-file': {
-      preLoaderRoute: typeof DashboardClientsAddFileImport
+      preLoaderRoute: typeof DashboardClientsAddFileLazyImport
       parentRoute: typeof DashboardClientsLazyImport
     }
     '/dashboard/clients/view-file': {
-      preLoaderRoute: typeof DashboardClientsViewFileImport
+      preLoaderRoute: typeof DashboardClientsViewFileLazyImport
       parentRoute: typeof DashboardClientsLazyImport
     }
     '/dashboard/clients/': {
-      preLoaderRoute: typeof DashboardClientsIndexImport
+      preLoaderRoute: typeof DashboardClientsIndexLazyImport
       parentRoute: typeof DashboardClientsLazyImport
     }
     '/dashboard/clients/client/$fileId': {
-      preLoaderRoute: typeof DashboardClientsClientFileIdImport
+      preLoaderRoute: typeof DashboardClientsClientFileIdLazyImport
       parentRoute: typeof DashboardClientsLazyImport
     }
   }
@@ -182,14 +210,14 @@ export const routeTree = rootRoute.addChildren([
   AboutLazyRoute,
   CreateaccountLazyRoute,
   DashboardLazyRoute.addChildren([
-    DashboardAnalyticsLazyRoute,
+    DashboardCalenderLazyRoute,
     DashboardClientsLazyRoute.addChildren([
-      DashboardClientsClientIdRoute,
-      DashboardClientsAddClientRoute,
-      DashboardClientsAddFileRoute,
-      DashboardClientsViewFileRoute,
-      DashboardClientsIndexRoute,
-      DashboardClientsClientFileIdRoute,
+      DashboardClientsClientIdLazyRoute,
+      DashboardClientsAddClientLazyRoute,
+      DashboardClientsAddFileLazyRoute,
+      DashboardClientsViewFileLazyRoute,
+      DashboardClientsIndexLazyRoute,
+      DashboardClientsClientFileIdLazyRoute,
     ]),
     DashboardDashboardLazyRoute,
   ]),

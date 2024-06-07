@@ -116,9 +116,9 @@ function ClientList({ name_like }: { name_like: string }) {
   });
 
   return (
-    <div className="container mx-auto px-4 md:px-6 lg:px-8 flex-1">
-      <div className="bg-background rounded-lg shadow-md overflow-hidden">
-        <ScrollArea className="rounded-md h-96 border p-4">
+    <div className="container mx-auto px-4 md:px-6 lg:px-8  max-h-[600px] flex-1">
+      <div className="bg-background rounded-lg shadow-md h-full overflow-hidden">
+        <ScrollArea className="rounded-md h-full  border p-4">
           <table className="w-full table-auto">
             <thead className="bg-muted/40">
               <tr>
@@ -168,7 +168,7 @@ function ClientIndex() {
   const [name_like, setNameLike] = useState("");
 
   return (
-    <div className="flex max-h-screen w-full flex-col">
+    <div className="flex h-screen min-h-screen w-full flex-col">
       <div className="w-full mb-8 flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">Clients</h1>
@@ -190,13 +190,13 @@ function ClientIndex() {
       </div>
 
       <main className="flex flex-wrap h-full">
-        <Card className="flex flex-col items-center h-96">
+        <Card className="flex w-full h-max md:w-auto flex-col items-center">
           <CardHeader>
             <CardTitle>Tools</CardTitle>
           </CardHeader>
 
           <CardContent>
-            <div className="flex sm:flex-row md:flex-col">
+            <div className="flex flex-row md:flex-col">
               <Link
                 className="flex flex-col items-center gap-1 p-2 rounded-md hover:bg-muted"
                 to="/dashboard/clients/add-file"
@@ -221,7 +221,7 @@ function ClientIndex() {
               </Link>
               <Link
                 className="flex flex-col items-center gap-2 p-2 rounded-md hover:bg-muted"
-                href="#"
+                to="/dashboard/calender"
               >
                 <CalendarSearchIcon className="w-6 h-6" />
                 <span>Calendar</span>

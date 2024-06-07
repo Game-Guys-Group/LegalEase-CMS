@@ -16,24 +16,34 @@ import {
 export const Route = createRootRoute({
   component: () => {
     return (
-      <>
-        <div className="px-2 flex gap-2 items-center justify-between h-14 max-w-screen-2xl fixed w-full top-0 left-0 bg-muted/40">
-          <div className="flex items-center">
-            <div className="px-2 flex items-center">
-              <Scale className="inline" />
+      <div className="max-w-screen-4xl min-h-screen">
+        <div className="px-10 flex gap-2 items-center justify-between h-14 fixed w-full top-0 left-0 bg-muted/40">
+          <div className="flex w-full items-center">
+            <div className="flex items-center justify-between px-4 py-2">
+              <div className="px-2 flex items-center">
+                <Scale className="inline" />
+              </div>
+              <div className="font-bold text-lg inline pl-4 pr-8 font-mono whitespace-nowrap uppercase">
+                LegalEase CMS
+              </div>
             </div>
-            <div className="font-bold text-lg inline pl-4 pr-8 font-mono uppercase">
-              LeagalEase CMS
-            </div>
-            <Link to="/" className="[&.active]:font-bold px-2">
-              Home
-            </Link>
-            <Link to="/about" className="[&.active]:font-bold px-2">
-              About
-            </Link>
           </div>
 
-          <div className="flex items-center mx-4 gap-4">
+          <div className="flex  items-center mx-4 gap-4">
+            <div className="sm:flex sm:items-start sm:justify-between ">
+              <Link to="/" className="[&.active]:font-bold px-4">
+                Home
+              </Link>
+              <Link href="#about" className="[&.active]:font-bold px-4">
+                About
+              </Link>
+              <Link href="#features" className="[&.active]:font-bold px-4">
+                Features
+              </Link>
+              <Link href="#register" className="[&.active]:font-bold px-4">
+                Register
+              </Link>
+            </div>
             {localStorage.getItem("auth_key") ? (
               // (<Button className='px-8 mx-8' onClick={() => localStorage.removeItem("auth_key") }>
               //   <Link to="./" className='font-bold px-2'> Logout</Link>
@@ -58,7 +68,7 @@ export const Route = createRootRoute({
                   <DropdownMenuItem
                     onClick={() => localStorage.removeItem("auth_key")}
                   >
-                    <Link to="./" className="font-bold px-2">
+                    <Link href="./" className="font-bold px-2">
                       {" "}
                       Logout
                     </Link>
@@ -79,12 +89,12 @@ export const Route = createRootRoute({
 
         <hr />
 
-        <div className="w-full mt-14">
+        <div className="w-full h-full items-center mt-14">
           <Outlet />
         </div>
 
         <TanStackRouterDevtools />
-      </>
+      </div>
     );
   },
 });

@@ -24,6 +24,16 @@ export const map_file_data = (data: any) => {
   return data.map(map_file);
 };
 
+export async function getAuthToken(): Promise<string> {
+  const token = localStorage.getItem("auth_key");
+  if (token) {
+    return token;
+  }
+
+  //fail
+  return Promise.reject("No token found");
+}
+
 export async function login(
   email: string,
   password: string,
@@ -79,12 +89,10 @@ interface UseAuthOptions<T> {
   body?: any;
 }
 
-export function useAuth<T>({
-  url,
-  parseFn,
-  method = "GET",
-  body = {},
-}: UseAuthOptions<T>): UseAuthResult<T> {
+export function useAuth<T>(
+  { url, parseFn, method = "GET", body = {} }: UseAuthOptions<T>,
+  headers?: any,
+): UseAuthResult<T> {
   const [error, setError] = useState<string | null>(null);
   const [isFetching, setIsFetching] = useState(false);
 
@@ -93,7 +101,7 @@ export function useAuth<T>({
 
     const response = await fetch(url, {
       method: method,
-      headers: {
+      headers: headers || {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("auth_key")}`,
       },
