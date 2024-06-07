@@ -13,6 +13,7 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
+  DialogClose,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -56,15 +57,15 @@ export default function Cal() {
   return (
     <div className="flex w-full flex-col h-screen min-h-screen">
       <div className="">
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="rounded-lg shadow-md p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-bold">Calendar</h2>
           </div>
 
-          <div className="mt-16 h-96">
+          <div className="mt-16 h-96 bg-muted/40 p-4">
             <h3 className="text-sm font-bold mb-2">Upcoming Appointments</h3>
             <div className="grid gap-4">
-              <div className="flex items-center justify-between bg-gray-100 rounded-lg p-4">
+              <div className="flex items-center justify-between bg-muted/20 rounded-lg p-4">
                 <div>
                   <h4 className="text-sm font-bold">John Smith</h4>
                   <p className="text-sm text-gray-500">
@@ -81,7 +82,7 @@ export default function Cal() {
                   </Button>
                 </div>
               </div>
-              <div className="flex items-center justify-between bg-gray-100 rounded-lg p-4">
+              <div className="flex items-center justify-between bg-muted/20 rounded-lg p-4">
                 <div>
                   <h4 className="text-sm font-bold">Jane Doe</h4>
                   <p className="text-sm text-gray-500">
@@ -126,22 +127,16 @@ export default function Cal() {
                       <Label htmlFor="event-name">Event Name</Label>
                       <Input id="event-name" placeholder="Enter event name" />
                     </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="event-date">Date</Label>
                       <Input id="event-date" type="date" />
                     </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
+
                     <div className="space-y-2">
                       <Label htmlFor="event-time">Time</Label>
                       <Input id="event-time" type="time" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="event-location">Location</Label>
-                      <Input
-                        id="event-location"
-                        placeholder="Enter event location"
-                      />
                     </div>
                   </div>
                   <div className="space-y-2">
@@ -154,9 +149,11 @@ export default function Cal() {
                   </div>
                 </form>
                 <DialogFooter>
-                  <Button variant="outline" className="mr-auto">
-                    Cancel
-                  </Button>
+                  <DialogClose asChild>
+                    <Button variant="outline" className="mr-auto">
+                      Cancel
+                    </Button>
+                  </DialogClose>
                   <Button type="submit">Save Event</Button>
                 </DialogFooter>
               </DialogContent>

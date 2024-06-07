@@ -328,3 +328,49 @@ def get_attachment(
 
 
 #events
+def create_event(db: Session, event: schemas.Event, user: models.User) -> models.Event:
+    client = db.query(models.Client).filter(models.Client.id == event.client_id).first()
+    if not client:
+        raise HTTPException(status_code=404, detail="Client not found")
+    if client.owner != user:
+        raise HTTPException(status_code=401, detail="unauthorized access")
+    db_event = models.Event(
+        date=event.date,
+        description=event.description,
+        client=client,
+    )
+    db.add(db_event)
+    db.commit()
+    db.refresh(db_event)
+    return db_event
+
+def update_event(db: Session, event: schemas.UpdateEvent, user: models.User) -> models.Event:
+    verify_event = (
+        db.query(models.Event)
+        .filter(models.Event.client.owner == user, models.Event.id == event.event_id)
+        .first()
+    )
+    if not verify_event:
+        raise HTTPException(status_code=404, detail="Event not found")
+
+    if event.date:
+        verify_event.date = event.date
+    if event.time:
+        verify_event.time = event.time
+    if event.description:
+        verify_event.description = event.description
+    db.commit()
+    db.refresh(verify_event)
+    return verify_event
+
+def delete_event(db: Session, event_id: int, user: models.User):
+    verify_event = (
+        db.query(models.Event)
+        .filter(models.Event.client.owner == user, models.Event.id == event_id)
+        .first()
+    )
+    if not verify_event:
+        raise HTTPException(status_code=404, detail="Event not found")
+    db.delete(verify_event)
+    db.commit()
+    return {"message": "Event deleted"}

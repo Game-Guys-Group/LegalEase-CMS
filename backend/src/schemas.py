@@ -81,6 +81,16 @@ class Event(BaseModel):
     event_name: str
     date: str
     client_id: int
-    time: str
-    location: str
     description: str
+
+class CancelEvent(BaseModel):
+    event_id: int
+    client_id: int
+
+class UpdateEvent(BaseModel):
+    event_id: int
+    client_id: int
+
+    event_name: str | None = None
+    date: str | None = None
+    description: str | None = None

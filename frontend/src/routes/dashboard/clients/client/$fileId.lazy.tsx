@@ -43,6 +43,7 @@ function ViewFile(view: Viewer) {
   const [file, setFile] = useState<Blob | undefined>(undefined);
 
   const get_file = async () => {
+    setPageNumber(1);
     if (!view.attachment) return;
     const token = await getAuthToken();
     fetch(`/file/attachment/get/${view.attachment.id}`, {

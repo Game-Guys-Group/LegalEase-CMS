@@ -1,5 +1,6 @@
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql.sqltypes import DateTime
 
 from .database import Base
 
@@ -58,8 +59,10 @@ class Attachment(Base):
 class Event(Base):
     __tablename__ = "events"
     id = Column(Integer, primary_key=True)
-    date = Column(String)
-    time = Column(String)
+
+    event_name = Column(String)
+    date = Column(DateTime)
     description = Column(String)
+
     client_id = Column(Integer, ForeignKey("clients.id"))
     client = relationship("Client", back_populates="events")
