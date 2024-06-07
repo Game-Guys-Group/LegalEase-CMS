@@ -34,15 +34,6 @@ export const Route = createRootRoute({
               <Link to="/" className="[&.active]:font-bold px-4">
                 Home
               </Link>
-              <Link href="#about" className="[&.active]:font-bold px-4">
-                About
-              </Link>
-              <Link href="#features" className="[&.active]:font-bold px-4">
-                Features
-              </Link>
-              <Link href="#register" className="[&.active]:font-bold px-4">
-                Register
-              </Link>
             </div>
             {localStorage.getItem("auth_key") ? (
               // (<Button className='px-8 mx-8' onClick={() => localStorage.removeItem("auth_key") }>
@@ -76,12 +67,12 @@ export const Route = createRootRoute({
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <Button className="px-8 mx-8">
-                <Link to="/login" className="font-bold px-2">
-                  {" "}
-                  Login{" "}
-                </Link>
-              </Button>
+              <Link
+                to="/login"
+                className="font-bold px-4 py-2 rounded-sm bg-orange-600"
+              >
+                Login
+              </Link>
             )}
             <ModeToggle />
           </div>

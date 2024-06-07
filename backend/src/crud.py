@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from sqlalchemy.sql.schema import Column
 
 from . import models, schemas, database
 from typing import Optional, List, cast
@@ -10,7 +11,6 @@ from datetime import datetime, timedelta, timezone
 from typing import Annotated
 
 from fastapi import Depends, HTTPException, UploadFile, status
-from typing import BinaryIO
 
 from .storage import file_store
 
@@ -48,7 +48,7 @@ def authenticate_user(db: Session, email: str, password: str) -> Optional[models
         return None
     if not verify_password(password, user.hashed_password):
         return None
-    if not user.is_active:
+    if not cast(bool, user.is_active):
         return None
     return user
 
@@ -196,11 +196,11 @@ def update_client(
     if not verify_client:
         raise HTTPException(status_code=404, detail="Client not found")
     if client.email:
-        verify_client.email = client.email
+        verify_client.email = cast(Column[str], client.email)
     if client.name:
-        verify_client.name = client.name
+        verify_client.name = cast(Column[str], client.name)
     if client.phone:
-        verify_client.phone = client.phone
+        verify_client.phone = cast(Column[str], client.phone)
     db.commit()
     db.refresh(verify_client)
     return verify_client
@@ -326,25 +326,45 @@ def get_attachment(
     return file_store.load(cast(str, attachment.url))
 
 
+def combine_date_time(date: str, time: str) -> datetime:
+    date_ = datetime.strptime(date, "%Y-%m-%d")
+    time_ = datetime.strptime(time, "%H:%M")
+    return date_ + timedelta(hours=time_.hour, minutes=time_.minute)
 
-#events
-def create_event(db: Session, event: schemas.Event, user: models.User) -> models.Event:
+
+# events
+def create_event(
+    db: Session, event: schemas.Event, user: models.User
+) -> schemas.EventResponse:
     client = db.query(models.Client).filter(models.Client.id == event.client_id).first()
     if not client:
         raise HTTPException(status_code=404, detail="Client not found")
     if client.owner != user:
         raise HTTPException(status_code=401, detail="unauthorized access")
+
     db_event = models.Event(
-        date=event.date,
+        date=combine_date_time(event.date, event.time),
         description=event.description,
         client=client,
+        event_name=event.event_name,
     )
+
     db.add(db_event)
     db.commit()
     db.refresh(db_event)
-    return db_event
+    return schemas.EventResponse(
+        event_id=cast(int, db_event.id),
+        event_name=cast(str, db_event.event_name),
+        date=cast(datetime, db_event.date).isoformat(),
+        client_id=cast(int, db_event.client_id),
+        client_name=cast(str, db_event.client.name),
+        description=cast(str, db_event.description),
+    )
 
-def update_event(db: Session, event: schemas.UpdateEvent, user: models.User) -> models.Event:
+
+def update_event(
+    db: Session, event: schemas.UpdateEvent, user: models.User
+) -> models.Event:
     verify_event = (
         db.query(models.Event)
         .filter(models.Event.client.owner == user, models.Event.id == event.event_id)
@@ -363,6 +383,7 @@ def update_event(db: Session, event: schemas.UpdateEvent, user: models.User) -> 
     db.refresh(verify_event)
     return verify_event
 
+
 def delete_event(db: Session, event_id: int, user: models.User):
     verify_event = (
         db.query(models.Event)
@@ -374,3 +395,35 @@ def delete_event(db: Session, event_id: int, user: models.User):
     db.delete(verify_event)
     db.commit()
     return {"message": "Event deleted"}
+
+
+def filter_client(query, client_id: int | None):
+    if not client_id:
+        return query
+
+    return query.filter(models.Event.client_id == client_id)
+
+
+def get_events(
+    db: Session, user: models.User, client_id: int | None
+) -> List[schemas.EventResponse]:
+    if client_id is not None:
+        verify_client = (
+            db.query(models.Client)
+            .filter(models.Client.owner == user, models.Client.id == client_id)
+            .first()
+        )
+        if not verify_client:
+            raise HTTPException(status_code=404, detail="Client not found")
+
+    return [
+        schemas.EventResponse(
+            event_id=cast(int, event.id),
+            event_name=cast(str, event.event_name),
+            date=event.date.isoformat(),
+            client_id=cast(int, event.client_id),
+            description=cast(str, event.description),
+            client_name=cast(str, event.client.name),
+        )
+        for event in filter_client(db.query(models.Event), client_id)
+    ]

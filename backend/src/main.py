@@ -269,3 +269,21 @@ def get_attachment(
     return FileResponse(
         path=path, media_type="application/octet-stream", filename=f_name
     )
+
+
+@app.post("/events/create", response_model=schemas.Event)
+def create_event(
+    event: schemas.Event,
+    current_user: models.User = Depends(crud.get_current_user),
+    db: Session = Depends(crud.get_db),
+):
+    return crud.create_event(db=db, event=event, user=current_user)
+
+
+@app.get("/events/get", response_model=List[schemas.EventResponse])
+def get_events(
+    client_id: int | None = None,
+    current_user: models.User = Depends(crud.get_current_user),
+    db: Session = Depends(crud.get_db),
+):
+    return crud.get_events(db=db, user=current_user, client_id=client_id)

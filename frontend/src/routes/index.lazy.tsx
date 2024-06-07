@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
-import { createLazyFileRoute } from "@tanstack/react-router";
+import { createLazyFileRoute, Navigate } from "@tanstack/react-router";
 
-import { useNavigate } from "@tanstack/react-router";
 import { CreateAccount } from "./create_account.lazy";
+import { Avatar, AvatarFallback } from "@radix-ui/react-avatar";
+import { Separator } from "@/components/ui/separator";
 
 export const Route = createLazyFileRoute("/")({
   component: Index,
 });
 
 function Index() {
-  const navigate = useNavigate();
-  const [key, setKey] = useState("");
+  const [key, setKey] = useState(localStorage.getItem("auth_key"));
 
   useEffect(() => {
     const auth_key = localStorage.getItem("auth_key");
@@ -18,17 +18,12 @@ function Index() {
   }, [key]);
 
   if (key) {
-    navigate({ to: "/dashboard/dashboard", replace: true });
-    return (
-      <div className="flex flex-col items-center justify-center h-full w-full mt-24">
-        <div className=" border-b-secondary-foreground  h-60 w-60 animate-spin rounded-full border-8 border-t-primary-foreground" />
-        <h1 className="mt-16">Loading</h1>
-      </div>
-    );
+    return <Navigate to="/dashboard/dashboard" />;
   }
+
   return (
     <>
-      <section id="home" className="w-full">
+      <section id="home" className="w-full dark:text-black bg-orange-100">
         <div className="container flex flex-wrap space-x-4 px-4 mx-auto max-w-screen-xl justify-between pt-20 pb-20  w-full md:h-3/4">
           <div className="flex flex-col justify-center lg:w-1/2">
             <h3 className="mb-4 text-2xl font-semibold leading-none md:text-2xl lg:text-2xl">
@@ -48,7 +43,7 @@ function Index() {
             </p>
             <a
               href="#features"
-              className="text-accent-foreground hover:underline font-medium text-lg inline-flex items-center"
+              className="text-accent-foreground hover:underline dark:text-orange-950 font-medium text-lg inline-flex items-center"
             >
               Read more about our app
               <svg
@@ -83,7 +78,7 @@ function Index() {
             </h1>
             <div className="px-8 gap-4  mt-4 md:mt-4 flex flex-wrap justify-center">
               <div className="max-w-sm p-6  border border-gray-200 rounded-lg shadow  dark:border-gray-700">
-                <h5 className="mb-2 text-2xl font-bold tracking-tight">
+                <h5 className="mb-2 text-2xl font-bold tracking-tight text-orange-500">
                   Streamlined Document Management
                 </h5>
                 <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
@@ -93,7 +88,7 @@ function Index() {
                 </p>
               </div>
               <div className="max-w-sm p-6  border border-gray-200 rounded-lg shadow  dark:border-gray-700">
-                <h5 className="mb-2 text-2xl font-bold tracking-tight  ">
+                <h5 className="mb-2 text-2xl font-bold tracking-tight  text-orange-500">
                   Integrated Case File System
                 </h5>
 
@@ -104,7 +99,7 @@ function Index() {
                 </p>
               </div>
               <div className="max-w-sm p-6  border border-gray-200 rounded-lg shadow  dark:border-gray-700">
-                <h5 className="mb-2 text-2xl font-bold tracking-tight  ">
+                <h5 className="mb-2 text-2xl font-bold tracking-tight text-orange-500">
                   Efficient Client Communication
                 </h5>
                 <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
@@ -192,6 +187,61 @@ function Index() {
                   />
                 </svg>
               </a>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section className="w-full py-12 md:py-24 lg:py-32 border-t bg-muted">
+        <div className="container px-4 md:px-6">
+          <div className="space-y-3 text-center">
+            <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">
+              What Our Clients Say
+            </h2>
+            <p className="mx-auto max-w-[600px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
+              Hear from lawyers who have transformed their practices with Acme
+              Legal CMS.
+            </p>
+          </div>
+          <div className="mx-auto grid max-w-5xl items-center gap-6 py-12 lg:grid-cols-2 lg:gap-12">
+            <div className="rounded-lg border border-gray-200 p-6 shadow-sm dark:border-gray-800">
+              <div className="flex items-start gap-4">
+                <Avatar>
+                  <AvatarFallback>SD</AvatarFallback>
+                </Avatar>
+                <div>
+                  <h4 className="text-lg font-bold">Sofia Davis</h4>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    Founder, Davis Law Firm
+                  </p>
+                </div>
+              </div>
+              <Separator className="my-4" />
+              <p className="text-gray-500 dark:text-gray-400">
+                "Legal Ease CMS has been a game-changer for my law firm.The
+                intuitive document management and client communication tools
+                have streamlined our workflows and allowed us to provide better
+                service to our clients."
+              </p>
+            </div>
+            <div className="rounded-lg border border-gray-200 p-6 shadow-sm dark:border-gray-800">
+              <div className="flex items-start gap-4">
+                <Avatar>
+                  <AvatarFallback>JW</AvatarFallback>
+                </Avatar>
+                <div>
+                  <h4 className="text-lg font-bold">John Williams</h4>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    Partner, Williams & Associates
+                  </p>
+                </div>
+              </div>
+              <Separator className="my-4" />
+              <p className="text-gray-500 dark:text-gray-400">
+                "I was hesitant to switch to a new CMS, but Legal Ease CMS has
+                exceeded my expectations. The reporting features have been
+                invaluable in helping me make data-driven decisions to grow my
+                practice."
+              </p>
             </div>
           </div>
         </div>

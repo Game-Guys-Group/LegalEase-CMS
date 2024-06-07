@@ -80,12 +80,24 @@ class Attachment(BaseModel):
 class Event(BaseModel):
     event_name: str
     date: str
+    time: str
     client_id: int
     description: str
+
+
+class EventResponse(BaseModel):
+    event_id: int
+    event_name: str
+    date: str
+    client_id: int
+    client_name: str
+    description: str
+
 
 class CancelEvent(BaseModel):
     event_id: int
     client_id: int
+
 
 class UpdateEvent(BaseModel):
     event_id: int
