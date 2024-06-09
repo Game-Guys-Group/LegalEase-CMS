@@ -36,6 +36,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { CalendarDaysIcon } from "lucide-react";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { format } from "date-fns";
 
 interface Event {
   client_id: string;
@@ -56,7 +58,7 @@ interface EventResponse {
 
 type event_key = "client_id" | "event_name" | "date" | "time" | "description";
 
-function Reschedule() {
+function Reschedule({ event_id }: { event: number }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -132,6 +134,7 @@ export default function Cal() {
   const [event, setEvent] = useState<Event>({} as Event);
   const set_event = (key: event_key, value: string) => {
     setEvent({ ...event, [key]: value });
+    console.log(key, value);
   };
 
   const events = useAuth<EventResponse[]>({
@@ -172,6 +175,10 @@ export default function Cal() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [open, setOpen] = useState(false);
 
+  const clear = () => {
+    setEvent({} as Event);
+  };
+
   const handle_submit = async (e: React.FormEvent) => {
     if (isSubmitting) return;
     e.preventDefault();
@@ -180,6 +187,7 @@ export default function Cal() {
 
     if (!event.client_id || !event.event_name || !event.date || !event.time) {
       setError("Please fill out all fields");
+      setIsSubmitting(false);
       return;
     }
 
@@ -198,7 +206,10 @@ export default function Cal() {
       setError(json["detail"][0]["msg"]);
     } else {
       setError(null);
+      setOpen(false);
+      clear();
     }
+    setIsSubmitting(false);
   };
 
   const res = useQuery({ queryKey: ["events"], queryFn: events.getData });
@@ -209,32 +220,10 @@ export default function Cal() {
         <div className="rounded-lg shadow-md p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-bold">Calendar</h2>
-          </div>
 
-          <div className="mt-16 h-96 bg-muted/40 p-4">
-            <h3 className="text-sm font-bold mb-2">Upcoming Appointments</h3>
-            <div className="grid gap-4">
-              {res.data?.map((event) => (
-                <div className="flex items-center justify-between bg-muted/20 rounded-lg p-4">
-                  <div>
-                    <h4 className="text-sm font-bold">{event.client_name}</h4>
-                    <p className="text-sm text-gray-500">{event.event_name}</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <p className="text-sm font-bold">{event.date}</p>
-                    <Reschedule />
-                    <Button variant="outline" size="sm">
-                      Cancel
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="mt-4">
             <Dialog open={open} onOpenChange={setOpen}>
               <DialogTrigger asChild>
-                <Button variant="outline">Add Event</Button>
+                <Button>Add Event</Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[600px]">
                 <DialogHeader>
@@ -248,7 +237,7 @@ export default function Cal() {
                     </p>
                   )}
                 </DialogHeader>
-                <form className="grid gap-4 py-4" onSubmit={handle_submit}>
+                <form className="grid gap-4 py-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-5 flex flex-col">
                       <Label> Client </Label>
@@ -273,27 +262,54 @@ export default function Cal() {
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="event-date">Date</Label>
-                      <Input
-                        value={event.date}
-                        onChange={(value) =>
-                          set_event("date", value.target.value)
-                        }
-                        onFocus={(e) => (e.target.type = "date")}
-                        id="event-date"
-                        type="date"
-                      />
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant="outline"
+                            className="space-y-2 w-full justify-start text-left font-normal"
+                          >
+                            <CalendarDaysIcon className="mr-1 h-4 w-4 -translate-x-1" />
+                            {event.date
+                              ? format(event.date, "dd/MM/yyyy")
+                              : "Select a date"}
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={
+                              event.date ? new Date(event.date) : undefined
+                            }
+                            onSelect={(day) =>
+                              day &&
+                              set_event("date", format(day, "dd/MM/yyyy"))
+                            }
+                          />
+                        </PopoverContent>
+                      </Popover>
                     </div>
 
                     <div className="space-y-2">
                       <Label htmlFor="event-time">Time</Label>
-                      <Input
-                        value={event.time}
-                        onChange={(value) =>
-                          set_event("time", value.target.value)
-                        }
-                        id="event-time"
-                        type="time"
-                      />
+
+                      <Select
+                        onValueChange={(value) => set_event("time", value)}
+                      >
+                        <SelectTrigger className="col-span-3 text-gray-500 dark:text-gray-400">
+                          <SelectValue placeholder="Select a time" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="9:00">9:00 AM</SelectItem>
+                          <SelectItem value="10:00">10:00 AM</SelectItem>
+                          <SelectItem value="11:00">11:00 AM</SelectItem>
+                          <SelectItem value="12:00">12:00 PM</SelectItem>
+                          <SelectItem value="13:00">1:00 PM</SelectItem>
+                          <SelectItem value="14:00">2:00 PM</SelectItem>
+                          <SelectItem value="15:00">3:00 PM</SelectItem>
+                          <SelectItem value="16:00">4:00 PM</SelectItem>
+                          <SelectItem value="17:00">5:00 PM</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
                   </div>
                   <div className="space-y-2">
@@ -308,20 +324,47 @@ export default function Cal() {
                       }
                     />
                   </div>
-                  <DialogFooter>
-                    <DialogClose asChild>
-                      <Button variant="outline" className="mr-auto">
-                        Cancel
-                      </Button>
-                    </DialogClose>
-                    <Button type="submit" onClick={handle_submit}>
-                      Save Event
-                    </Button>
-                  </DialogFooter>
                 </form>
+
+                <div className="flex justify-between">
+                  <DialogClose asChild>
+                    <Button variant="outline" className="mr-auto">
+                      Cancel
+                    </Button>
+                  </DialogClose>
+                  <Button onClick={handle_submit}>Save Event</Button>
+                </div>
               </DialogContent>
             </Dialog>
           </div>
+          <ScrollArea className="h-3/4">
+            <div className="mt-16 h-96 bg-muted/40 p-4">
+              <h3 className="text-sm font-bold mb-2">Upcoming Appointments</h3>
+              <div className="grid gap-4">
+                {res.data?.map((event, k) => (
+                  <div
+                    key={k}
+                    className="flex items-center justify-between bg-muted/20 rounded-lg p-4"
+                  >
+                    <div>
+                      <h4 className="text-sm font-bold">{event.client_name}</h4>
+                      <p className="text-sm text-gray-500">
+                        {event.event_name}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <p className="text-sm font-bold">{event.date}</p>
+                      <Reschedule event={event.event_id} />
+                      <Button variant="outline" size="sm">
+                        Cancel
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </ScrollArea>
+          <div className="mt-4"></div>
         </div>
       </div>
     </div>

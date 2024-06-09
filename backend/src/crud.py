@@ -327,7 +327,7 @@ def get_attachment(
 
 
 def combine_date_time(date: str, time: str) -> datetime:
-    date_ = datetime.strptime(date, "%Y-%m-%d")
+    date_ = datetime.strptime(date, "%d/%M/%Y")
     time_ = datetime.strptime(time, "%H:%M")
     return date_ + timedelta(hours=time_.hour, minutes=time_.minute)
 
@@ -427,3 +427,26 @@ def get_events(
         )
         for event in filter_client(db.query(models.Event), client_id)
     ]
+
+
+def get_info(db: Session, user: models.User) -> schemas.ProfileInfo:
+    file_count = (
+        db.query(models.File).filter(models.File.client.has(owner=user)).count()
+    )
+    event_count = (
+        db.query(models.Event).filter(models.Event.client.has(owner=user)).count()
+    )
+
+    client_count = db.query(models.Client).filter(models.Client.owner == user).count()
+    attachment_count = (
+        db.query(models.Attachment)
+        .join(models.File)
+        .filter(models.File.client.has(owner=user))
+        .count()
+    )
+    return schemas.ProfileInfo(
+        file_count=file_count,
+        event_count=event_count,
+        attachment_count=attachment_count,
+        client_count=client_count,
+    )

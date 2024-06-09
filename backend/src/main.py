@@ -171,6 +171,14 @@ def read_clients(
     )
 
 
+@app.get("/user/summary", response_model=schemas.ProfileInfo)
+def read_user_summary(
+    current_user: models.User = Depends(crud.get_current_user),
+    db: Session = Depends(crud.get_db),
+):
+    return crud.get_info(db, user=current_user)
+
+
 @app.get("/user/clients/get/{client_id}", response_model=schemas.Client)
 def read_client(
     client_id: int,
@@ -271,7 +279,7 @@ def get_attachment(
     )
 
 
-@app.post("/events/create", response_model=schemas.Event)
+@app.post("/events/create", response_model=schemas.EventResponse)
 def create_event(
     event: schemas.Event,
     current_user: models.User = Depends(crud.get_current_user),

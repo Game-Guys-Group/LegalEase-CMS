@@ -106,3 +106,10 @@ class UpdateEvent(BaseModel):
     event_name: str | None = None
     date: str | None = None
     description: str | None = None
+
+
+class ProfileInfo(BaseModel):
+    file_count: int
+    event_count: int
+    attachment_count: int
+    client_count: int

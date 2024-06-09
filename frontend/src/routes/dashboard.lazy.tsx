@@ -28,6 +28,9 @@ function splitPath(path: string): Array<Array<string>> {
 
   for (let i = 0; i < splits.length; i++) {
     paths.push([splits[i], `/${splits.slice(0, i + 1).join("/")}`]);
+    if (paths.length == 2) {
+      break;
+    }
   }
 
   return paths;
