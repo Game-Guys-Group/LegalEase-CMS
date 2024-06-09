@@ -58,11 +58,12 @@ interface EventResponse {
 
 type event_key = "client_id" | "event_name" | "date" | "time" | "description";
 
-function Reschedule({ event_id }: { event: number }) {
+function Reschedule({ event_id }: { event_id: number }) {
   const [open, setOpen] = useState(false);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
+      {event_id}
       <DialogTrigger asChild>
         <Button variant="outline">Reschedule Event</Button>
       </DialogTrigger>
@@ -354,7 +355,7 @@ export default function Cal() {
                     </div>
                     <div className="flex items-center gap-2">
                       <p className="text-sm font-bold">{event.date}</p>
-                      <Reschedule event={event.event_id} />
+                      <Reschedule event_id={event.event_id} />
                       <Button variant="outline" size="sm">
                         Cancel
                       </Button>

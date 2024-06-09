@@ -1,6 +1,6 @@
 import { createLazyFileRoute, Link } from "@tanstack/react-router";
 import { CardContent, Card } from "@/components/ui/card";
-import { Briefcase, CalendarIcon, DollarSign, File, Users } from "lucide-react";
+import { Briefcase, CalendarIcon, File, Users } from "lucide-react";
 import {
   PlusIcon,
   UsersIcon,
@@ -10,7 +10,6 @@ import {
 import { useAuth } from "@/api-helper";
 import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Calendar } from "@/components/ui/calendar";
 
 function Info({ value }: { value: number | null | undefined }) {
   if (!value) {
