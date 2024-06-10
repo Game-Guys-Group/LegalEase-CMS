@@ -100,11 +100,11 @@ function Index() {
               </div>
               <div className="max-w-sm p-6  border border-gray-200 rounded-lg shadow  dark:border-gray-700">
                 <h5 className="mb-2 text-2xl font-bold tracking-tight text-orange-500">
-                  Efficient Client Communication
+                  Efficient Client Management
                 </h5>
                 <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                  Enhance client relationships with seamless communication
-                  tools. Stay connected, provide updates, and manage client
+                  Enhance client relationships with seamless management tools.
+                  Stay connected, provide updates, and manage client
                   interactions more effectively.
                 </p>
               </div>
