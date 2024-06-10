@@ -61,9 +61,55 @@ type event_key = "client_id" | "event_name" | "date" | "time" | "description";
 function Reschedule({ event_id }: { event_id: number }) {
   const [open, setOpen] = useState(false);
 
+  const [event, setEvent] = useState<Event>({} as Event);
+  const set_event = (key: event_key, value: string) => {
+    setEvent({ ...event, [key]: value });
+    console.log(event);
+  };
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handle_submit = async () => {
+    if (isSubmitting) return;
+    setError(null);
+    setIsSubmitting(true);
+
+    if (!event.date || !event.time) {
+      setError("Please fill out all fields");
+      setIsSubmitting(false);
+      return;
+    }
+
+    const response = await fetch("/events/update", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("auth_key")}`,
+      },
+      body: JSON.stringify({
+        event_id: event_id,
+        date: event.date,
+        time: event.time,
+      }),
+    });
+
+    if (!response.ok) {
+      let json = await response.json();
+      console.log(json);
+      setError(json["detail"][0]["msg"]);
+    } else {
+      setError(null);
+      setOpen(false);
+    }
+    setOpen(false);
+    setIsSubmitting(false);
+  };
+
+  const [_day, setDay] = useState<Date | undefined>(undefined);
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      {event_id}
       <DialogTrigger asChild>
         <Button variant="outline">Reschedule Event</Button>
       </DialogTrigger>
@@ -73,6 +119,12 @@ function Reschedule({ event_id }: { event_id: number }) {
           <DialogDescription>
             Please select a new date and time for the event.
           </DialogDescription>
+
+          {error && (
+            <p className="bg-destructive text-white rounded-sm w-full p-4">
+              {error}
+            </p>
+          )}
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid items-center grid-cols-4 gap-4">
@@ -86,11 +138,18 @@ function Reschedule({ event_id }: { event_id: number }) {
                   className="col-span-3 justify-start text-left font-normal"
                 >
                   <CalendarDaysIcon className="mr-1 h-4 w-4 -translate-x-1" />
-                  Select a date
+                  {_day ? format(_day, "dd/MM/yyyy") : "Select a date"}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="start">
-                <Calendar mode="single" />
+                <Calendar
+                  mode="single"
+                  selected={_day}
+                  onSelect={(day) => {
+                    day && set_event("date", format(day, "dd/MM/yyyy"));
+                    setDay(day);
+                  }}
+                />
               </PopoverContent>
             </Popover>
           </div>
@@ -98,7 +157,7 @@ function Reschedule({ event_id }: { event_id: number }) {
             <Label htmlFor="time" className="text-right">
               Time
             </Label>
-            <Select>
+            <Select onValueChange={(value) => set_event("time", value)}>
               <SelectTrigger className="col-span-3 text-gray-500 dark:text-gray-400">
                 <SelectValue placeholder="Select a time" />
               </SelectTrigger>
@@ -117,7 +176,7 @@ function Reschedule({ event_id }: { event_id: number }) {
           </div>
         </div>
         <DialogFooter>
-          <Button type="submit">Reschedule</Button>
+          <Button onClick={handle_submit}>Reschedule</Button>
           <div>
             <Button onClick={() => setOpen(false)} variant="outline">
               Cancel
@@ -176,6 +235,7 @@ export default function Cal() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [open, setOpen] = useState(false);
 
+  const [_day, setDay] = useState<Date | undefined>(undefined);
   const clear = () => {
     setEvent({} as Event);
   };
@@ -213,6 +273,28 @@ export default function Cal() {
     setIsSubmitting(false);
   };
 
+  const handle_delete = async (event_id: number) => {
+    if (isSubmitting) return;
+    setError(null);
+    setIsSubmitting(true);
+    const response = await fetch(`/events/delete/${event_id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("auth_key")}`,
+      },
+    });
+    if (!response.ok) {
+      let json = await response.json();
+      console.log(json);
+      setError(json["detail"][0]["msg"]);
+    } else {
+      setError(null);
+      setOpen(false);
+    }
+    setOpen(false);
+    setIsSubmitting(false);
+  };
   const res = useQuery({ queryKey: ["events"], queryFn: events.getData });
 
   return (
@@ -270,21 +352,20 @@ export default function Cal() {
                             className="space-y-2 w-full justify-start text-left font-normal"
                           >
                             <CalendarDaysIcon className="mr-1 h-4 w-4 -translate-x-1" />
-                            {event.date
-                              ? format(event.date, "dd/MM/yyyy")
+                            {_day
+                              ? format(_day, "dd/MM/yyyy")
                               : "Select a date"}
                           </Button>
                         </PopoverTrigger>
                         <PopoverContent className="w-auto p-0" align="start">
                           <Calendar
                             mode="single"
-                            selected={
-                              event.date ? new Date(event.date) : undefined
-                            }
-                            onSelect={(day) =>
+                            selected={_day}
+                            onSelect={(day) => {
                               day &&
-                              set_event("date", format(day, "dd/MM/yyyy"))
-                            }
+                                set_event("date", format(day, "dd/MM/yyyy"));
+                              setDay(day);
+                            }}
                           />
                         </PopoverContent>
                       </Popover>
@@ -356,7 +437,14 @@ export default function Cal() {
                     <div className="flex items-center gap-2">
                       <p className="text-sm font-bold">{event.date}</p>
                       <Reschedule event_id={event.event_id} />
-                      <Button variant="outline" size="sm">
+                      <Button
+                        onClick={() => {
+                          res.refetch();
+                          handle_delete(event.event_id);
+                        }}
+                        variant="outline"
+                        size="sm"
+                      >
                         Cancel
                       </Button>
                     </div>

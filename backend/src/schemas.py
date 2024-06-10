@@ -101,10 +101,10 @@ class CancelEvent(BaseModel):
 
 class UpdateEvent(BaseModel):
     event_id: int
-    client_id: int
 
+    date: str
+    time: str
     event_name: str | None = None
-    date: str | None = None
     description: str | None = None
 
 

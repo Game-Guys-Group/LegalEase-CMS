@@ -288,6 +288,15 @@ def create_event(
     return crud.create_event(db=db, event=event, user=current_user)
 
 
+@app.post("/events/update", response_model=schemas.EventResponse)
+def update_event(
+    event: schemas.UpdateEvent,
+    current_user: models.User = Depends(crud.get_current_user),
+    db: Session = Depends(crud.get_db),
+):
+    return crud.update_event(db=db, event=event, user=current_user)
+
+
 @app.get("/events/get", response_model=List[schemas.EventResponse])
 def get_events(
     client_id: int | None = None,
@@ -295,3 +304,12 @@ def get_events(
     db: Session = Depends(crud.get_db),
 ):
     return crud.get_events(db=db, user=current_user, client_id=client_id)
+
+
+@app.delete("/events/delete/{event_id}")
+def delete_event(
+    event_id: int,
+    current_user: models.User = Depends(crud.get_current_user),
+    db: Session = Depends(crud.get_db),
+):
+    return crud.delete_event(db=db, user=current_user, event_id=event_id)

@@ -364,32 +364,35 @@ def create_event(
 
 def update_event(
     db: Session, event: schemas.UpdateEvent, user: models.User
-) -> models.Event:
+) -> schemas.EventResponse:
     verify_event = (
-        db.query(models.Event)
-        .filter(models.Event.client.owner == user, models.Event.id == event.event_id)
-        .first()
+        db.query(models.Event).filter(models.Event.id == event.event_id).first()
     )
     if not verify_event:
         raise HTTPException(status_code=404, detail="Event not found")
 
     if event.date:
-        verify_event.date = event.date
-    if event.time:
-        verify_event.time = event.time
-    if event.description:
-        verify_event.description = event.description
+        verify_event.date = cast(
+            Column[datetime], combine_date_time(event.date, event.time)
+        )
+
     db.commit()
     db.refresh(verify_event)
-    return verify_event
+
+    db_event = verify_event
+
+    return schemas.EventResponse(
+        event_id=cast(int, db_event.id),
+        event_name=cast(str, db_event.event_name),
+        date=cast(datetime, db_event.date).isoformat(),
+        client_id=cast(int, db_event.client_id),
+        client_name=cast(str, db_event.client.name),
+        description=cast(str, db_event.description),
+    )
 
 
 def delete_event(db: Session, event_id: int, user: models.User):
-    verify_event = (
-        db.query(models.Event)
-        .filter(models.Event.client.owner == user, models.Event.id == event_id)
-        .first()
-    )
+    verify_event = db.query(models.Event).filter(models.Event.id == event_id).first()
     if not verify_event:
         raise HTTPException(status_code=404, detail="Event not found")
     db.delete(verify_event)
